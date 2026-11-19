@@ -20,9 +20,9 @@ export async function signIn(
   }
 
   const supabase = await createSupabaseServerClient();
-  // Se entra con un usuario simple; por dentro es un correo local ficticio
+  // Solo se entra con el usuario creado en el panel; el correo interno no se expone
   const { error } = await supabase.auth.signInWithPassword({
-    email: username.includes("@") ? username : usernameToEmail(username),
+    email: usernameToEmail(username),
     password,
   });
 

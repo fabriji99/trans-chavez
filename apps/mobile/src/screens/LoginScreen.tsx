@@ -23,8 +23,8 @@ export function LoginScreen() {
     }
     setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({
-      // Si escribe un correo completo se usa tal cual; si no, es un usuario local
-      email: username.includes("@") ? username.trim() : usernameToEmail(username),
+      // Solo usuario: el correo interno se arma por dentro
+      email: usernameToEmail(username),
       password,
     });
     setLoading(false);
