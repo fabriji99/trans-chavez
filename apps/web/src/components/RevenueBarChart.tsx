@@ -34,7 +34,7 @@ export function RevenueBarChart({ data }: { data: RevenueBarDatum[] }) {
 
   return (
     <ResponsiveContainer width="100%" height={280}>
-      <BarChart data={data} margin={{ top: 8, right: 8, left: 8, bottom: 8 }}>
+      <BarChart data={data} margin={{ top: 8, right: 4, left: 0, bottom: 8 }}>
         <CartesianGrid
           vertical={false}
           stroke="var(--chart-grid)"
@@ -42,15 +42,17 @@ export function RevenueBarChart({ data }: { data: RevenueBarDatum[] }) {
         />
         <XAxis
           dataKey="label"
-          tick={{ fill: "var(--chart-ink-muted)", fontSize: 12 }}
+          interval="preserveStartEnd"
+          minTickGap={16}
+          tick={{ fill: "var(--chart-ink-muted)", fontSize: 11 }}
           axisLine={{ stroke: "var(--chart-baseline)" }}
           tickLine={false}
         />
         <YAxis
-          tick={{ fill: "var(--chart-ink-muted)", fontSize: 12 }}
+          tick={{ fill: "var(--chart-ink-muted)", fontSize: 11 }}
           axisLine={false}
           tickLine={false}
-          width={64}
+          width={52}
           tickFormatter={(v) => formatCurrency(Number(v))}
         />
         <Tooltip

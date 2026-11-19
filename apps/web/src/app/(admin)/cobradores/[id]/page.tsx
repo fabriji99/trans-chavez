@@ -36,7 +36,7 @@ export default async function EditarCobradorPage({
         </p>
       </div>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-5">
+      <section className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
         <form action={updateCobrador} className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <input type="hidden" name="id" value={cobrador.id} />
           <label className="space-y-1 text-xs text-slate-500">

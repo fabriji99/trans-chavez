@@ -27,7 +27,7 @@ export default async function RutasPage() {
         </p>
       </div>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-5">
+      <section className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
         <h2 className="mb-3 text-sm font-medium text-slate-700">
           Nueva ruta
         </h2>
@@ -87,7 +87,7 @@ export default async function RutasPage() {
         return (
           <section
             key={route.id}
-            className="rounded-xl border border-slate-200 bg-white p-5"
+            className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5"
           >
             <h2 className="text-sm font-medium text-slate-900">
               {route.name}

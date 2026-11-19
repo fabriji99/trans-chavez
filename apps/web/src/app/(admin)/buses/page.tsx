@@ -14,7 +14,7 @@ export default async function BusesPage() {
         <p className="text-sm text-slate-500">Flota de unidades disponibles.</p>
       </div>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-5">
+      <section className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
         <h2 className="mb-3 text-sm font-medium text-slate-700">Nuevo bus</h2>
         <form action={createBus} className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <input
@@ -45,8 +45,9 @@ export default async function BusesPage() {
         </form>
       </section>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-5">
-        <table className="w-full text-sm">
+      <section className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
+        <div className="overflow-x-auto">
+<table className="w-full min-w-max text-sm">
           <thead>
             <tr className="border-b border-slate-200 text-left text-slate-500">
               <th className="py-2">Placa</th>
@@ -83,6 +84,7 @@ export default async function BusesPage() {
             )}
           </tbody>
         </table>
+</div>
       </section>
     </div>
   );

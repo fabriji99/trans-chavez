@@ -113,7 +113,7 @@ export default async function ViajesPage({
         </p>
       </div>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-5">
+      <section className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
         <h2 className="mb-3 text-sm font-medium text-slate-700">Buscar viajes</h2>
         <form method="get" className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <select name="cobrador" defaultValue={filters.cobrador ?? ""} className={inputClass}>
@@ -176,12 +176,13 @@ export default async function ViajesPage({
         </form>
       </section>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-5">
+      <section className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
         <p className="mb-3 text-xs text-slate-500">
           {trips.length} {trips.length === 1 ? "viaje" : "viajes"}
           {hasFilters ? " con los filtros aplicados" : ""}
         </p>
-        <table className="w-full text-sm">
+        <div className="overflow-x-auto">
+<table className="w-full min-w-max text-sm">
           <thead>
             <tr className="border-b border-slate-200 text-left text-slate-500">
               <th className="py-2">Salida</th>
@@ -257,6 +258,7 @@ export default async function ViajesPage({
             )}
           </tbody>
         </table>
+</div>
       </section>
     </div>
   );

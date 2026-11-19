@@ -33,8 +33,9 @@ export default async function BoletosPage() {
         </p>
       </div>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-5">
-        <table className="w-full text-sm">
+      <section className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
+        <div className="overflow-x-auto">
+<table className="w-full min-w-max text-sm">
           <thead>
             <tr className="border-b border-slate-200 text-left text-slate-500">
               <th className="py-2">N.º boleto</th>
@@ -87,6 +88,7 @@ export default async function BoletosPage() {
             )}
           </tbody>
         </table>
+</div>
       </section>
     </div>
   );

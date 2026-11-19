@@ -127,7 +127,7 @@ export default async function DashboardPage() {
         </p>
       </div>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-5">
+      <section className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
         <p className="mb-4 text-xs text-slate-500">
           {change === null
             ? `Sin datos de ${MONTHS[prevMonth - 1]} para comparar`
@@ -141,7 +141,8 @@ export default async function DashboardPage() {
           <StatTile label="Promedio por viaje" value={avgPerTrip} />
         </div>
         {byCobrador.length > 0 && (
-          <table className="mt-4 w-full text-sm">
+          <div className="overflow-x-auto">
+<table className="mt-4 w-full min-w-max text-sm">
             <thead>
               <tr className="border-b border-slate-200 text-left text-slate-500">
                 <th className="py-2">Cobrador</th>
@@ -161,20 +162,22 @@ export default async function DashboardPage() {
               ))}
             </tbody>
           </table>
+</div>
         )}
       </section>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-5">
+      <section className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
         <h2 className="mb-4 text-sm font-medium text-slate-700">Ingresos por día</h2>
         <RevenueBarChart data={byDay} />
       </section>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-5">
+      <section className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
         <h2 className="mb-4 text-sm font-medium text-slate-700">Ingresos por ruta</h2>
         <RevenueBarChart
           data={byRoute.map((r) => ({ label: r.name, total_revenue: r.revenue }))}
         />
-        <table className="mt-4 w-full text-sm">
+        <div className="overflow-x-auto">
+<table className="mt-4 w-full min-w-max text-sm">
           <thead>
             <tr className="border-b border-slate-200 text-left text-slate-500">
               <th className="py-2">Ruta</th>
@@ -194,6 +197,7 @@ export default async function DashboardPage() {
             ))}
           </tbody>
         </table>
+</div>
       </section>
     </div>
   );

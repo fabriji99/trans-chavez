@@ -112,21 +112,22 @@ export default async function ViajeDetallePage({
         </p>
       )}
 
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 gap-2 sm:gap-4">
         {[
           { label: "Boletos", value: String(tickets.length) },
           { label: "Pasajeros", value: String(passengers) },
           { label: "Total cobrado", value: money(total) },
         ].map((stat) => (
-          <div key={stat.label} className="rounded-xl border border-slate-200 bg-white p-4">
+          <div key={stat.label} className="rounded-xl border border-slate-200 bg-white p-3 sm:p-4">
             <p className="text-xs text-slate-500">{stat.label}</p>
-            <p className="mt-1 text-xl font-semibold text-slate-900">{stat.value}</p>
+            <p className="mt-1 text-base font-semibold text-slate-900 sm:text-xl">{stat.value}</p>
           </div>
         ))}
       </div>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-5">
-        <table className="w-full text-sm">
+      <section className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
+        <div className="overflow-x-auto">
+<table className="w-full min-w-max text-sm">
           <thead>
             <tr className="border-b border-slate-200 text-left text-slate-500">
               <th className="py-2">N.º boleto</th>
@@ -167,6 +168,7 @@ export default async function ViajeDetallePage({
             )}
           </tbody>
         </table>
+</div>
       </section>
     </div>
   );

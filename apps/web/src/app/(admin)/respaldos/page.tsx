@@ -31,8 +31,9 @@ export default function RespaldosPage() {
         </p>
       </div>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-5">
-        <table className="w-full text-sm">
+      <section className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
+        <div className="overflow-x-auto">
+<table className="w-full min-w-max text-sm">
           <tbody>
             {months.map((month) => (
               <tr key={month.value} className="border-b border-slate-100">
@@ -54,6 +55,7 @@ export default function RespaldosPage() {
             </tr>
           </tbody>
         </table>
+</div>
       </section>
     </div>
   );
