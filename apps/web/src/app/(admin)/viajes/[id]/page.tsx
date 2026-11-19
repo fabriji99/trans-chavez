@@ -92,7 +92,10 @@ export default async function ViajeDetallePage({
           {STATUS_LABEL[trip.status]}
         </p>
         <p className="mt-1 text-xs text-slate-500">
-          {trip.started_at ? `Iniciado ${fmt(trip.started_at)}` : ""}
+          {trip.scheduled_at
+            ? `Horario ${new Date(trip.scheduled_at).toLocaleTimeString("es-HN", { timeZone: TZ, hour: "2-digit", minute: "2-digit" })} · `
+            : "Sin horario asignado · "}
+          {trip.started_at ? `Abierto (hora real) ${fmt(trip.started_at)}` : ""}
           {trip.ended_at ? ` · Finalizado ${fmt(trip.ended_at)}` : ""}
           {trip.synced_at ? ` · Sincronizado ${fmt(trip.synced_at)}` : " · Sin hora de sincronización"}
           {syncDelay !== null && syncDelay > 0 ? ` (${syncDelay} min después de finalizar)` : ""}

@@ -71,11 +71,22 @@ export interface Trip {
   driver_id: string | null;
   direction: TripDirection;
   departure_at: string;
+  /** Horario de la ruta al que se asignó el viaje (null = fuera de horario o sin horarios). */
+  scheduled_at: string | null;
   started_at: string | null;
   ended_at: string | null;
   /** Última vez que el servidor recibió este viaje desde la app. */
   synced_at: string | null;
   status: TripStatus;
+  created_at: string;
+}
+
+export interface RouteSchedule {
+  id: string;
+  route_id: string;
+  direction: TripDirection;
+  /** Hora de salida HH:MM:SS (hora de Honduras). */
+  depart_time: string;
   created_at: string;
 }
 

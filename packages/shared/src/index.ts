@@ -5,3 +5,4 @@ export * from "./schemas";
 export * from "./tripAlerts";
 export * from "./ticketNumber";
 export * from "./receipt";
+export * from "./tripSchedule";

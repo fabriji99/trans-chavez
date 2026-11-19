@@ -164,6 +164,7 @@ export async function startLocalTrip(
     id: newId(),
     ...fields,
     cobrador_id: uid,
+    scheduled_at: null,
     started_at: now,
     ended_at: null,
     synced_at: null,

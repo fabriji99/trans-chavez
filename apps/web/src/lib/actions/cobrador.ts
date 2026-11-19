@@ -11,6 +11,7 @@ import {
   directionLabel,
   formatTicketNumber,
   hondurasDay,
+  nearestSchedule,
   orderStopsForDirection,
   ticketPrefix,
   ticketSeq,
@@ -42,14 +43,6 @@ async function getOwnTrip(supabase: Supabase, tripId: string, userId: string): P
   return trip;
 }
 
-/** Hora HH:MM de hoy (hora de Honduras) como fecha ISO. */
-function todayAtHonduras(hhmm: string): string | null {
-  const match = /^([01]?\d|2[0-3]):([0-5]\d)$/.exec(hhmm.trim());
-  if (!match) return null;
-  const hh = match[1].padStart(2, "0");
-  return new Date(`${hondurasDay(new Date())}T${hh}:${match[2]}:00-06:00`).toISOString();
-}
-
 export async function startTrip(formData: FormData) {
   const profile = await requireCobrador();
   const supabase = await createSupabaseServerClient();
@@ -58,13 +51,11 @@ export async function startTrip(formData: FormData) {
   const direction = String(formData.get("direction") ?? "");
   const busId = String(formData.get("bus_id") ?? "");
   const driverId = String(formData.get("driver_id") ?? "");
-  const departure = todayAtHonduras(String(formData.get("time") ?? ""));
 
   if (!routeId) throw new Error("Elige la ruta del viaje.");
   if (direction !== "outbound" && direction !== "return") throw new Error("Elige el sentido del viaje.");
   if (!busId) throw new Error("Elige el bus del viaje.");
   if (!driverId) throw new Error("Elige el chofer del viaje.");
-  if (!departure) throw new Error("Escribe la hora con el formato HH:MM, por ejemplo 06:30.");
 
   // Un cobrador solo puede tener un viaje en curso a la vez
   const { data: open } = await supabase
@@ -77,6 +68,19 @@ export async function startTrip(formData: FormData) {
     redirect(`/cobrador/viaje/${open[0].id}`);
   }
 
+  // La hora la pone el servidor (no el cobrador): hora real de apertura y, si hay un
+  // horario de la ruta cerca, el viaje se asigna a ese horario.
+  const now = new Date();
+  const { data: scheduleRows } = await supabase
+    .from("route_schedules")
+    .select("depart_time")
+    .eq("route_id", routeId)
+    .eq("direction", direction);
+  const scheduledAt = nearestSchedule(
+    now,
+    ((scheduleRows as { depart_time: string }[] | null) ?? []).map((r) => r.depart_time),
+  );
+
   const id = randomUUID();
   const { error } = await supabase.rpc("sync_trip", {
     p_trip: {
@@ -85,8 +89,9 @@ export async function startTrip(formData: FormData) {
       bus_id: busId,
       driver_id: driverId,
       direction,
-      departure_at: departure,
-      started_at: new Date().toISOString(),
+      departure_at: scheduledAt ?? now.toISOString(),
+      scheduled_at: scheduledAt,
+      started_at: now.toISOString(),
       ended_at: null,
       status: "in_progress",
     },

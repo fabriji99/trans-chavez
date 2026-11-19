@@ -6,15 +6,6 @@ import { Chip } from "./Chip";
 import { directionLabel } from "@trans-chavez/shared";
 import type { Bus, Driver, Route, TripDirection } from "@trans-chavez/shared";
 
-function nowHondurasHHMM(): string {
-  return new Intl.DateTimeFormat("es-HN", {
-    timeZone: "America/Tegucigalpa",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  }).format(new Date());
-}
-
 const label = "mb-2 mt-5 text-xs font-semibold uppercase text-slate-500";
 
 export function StartTripForm({
@@ -30,11 +21,10 @@ export function StartTripForm({
   const [direction, setDirection] = useState<TripDirection | null>(null);
   const [busId, setBusId] = useState<string | null>(null);
   const [driverId, setDriverId] = useState<string | null>(null);
-  const [time, setTime] = useState(nowHondurasHHMM);
   const [sending, setSending] = useState(false);
 
   const route = routes.find((r) => r.id === routeId);
-  const ready = Boolean(routeId && direction && busId && driverId && /^\d{1,2}:\d{2}$/.test(time));
+  const ready = Boolean(routeId && direction && busId && driverId);
 
   return (
     <form action={startTrip} onSubmit={() => setSending(true)}>
@@ -94,16 +84,9 @@ export function StartTripForm({
         )}
       </div>
 
-      <p className={label}>Hora del viaje (HH:MM)</p>
-      <input
-        name="time"
-        value={time}
-        onChange={(e) => setTime(e.target.value)}
-        inputMode="numeric"
-        maxLength={5}
-        placeholder="06:30"
-        className="w-28 rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-base"
-      />
+      <p className="mt-6 text-xs text-slate-400">
+        La hora de salida se registra sola al iniciar el viaje.
+      </p>
 
       <button
         type="submit"

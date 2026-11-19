@@ -9,6 +9,7 @@ const NAV_ITEMS = [
   { href: "/cobradores", label: "Cobradores" },
   { href: "/choferes", label: "Choferes" },
   { href: "/viajes", label: "Viajes" },
+  { href: "/horarios", label: "Horarios" },
   { href: "/respaldos", label: "Respaldos" },
 ];
 
