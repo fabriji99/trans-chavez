@@ -42,7 +42,9 @@ export default async function proxy(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  if (data.user && isPublicPath) {
+  // Con ?error=... se deja ver el login aunque haya sesión (evita el bucle)
+  const hasLoginError = request.nextUrl.searchParams.has("error");
+  if (data.user && isPublicPath && !hasLoginError) {
     const url = request.nextUrl.clone();
     url.pathname = "/dashboard";
     return NextResponse.redirect(url);

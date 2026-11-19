@@ -1,9 +1,32 @@
 "use client";
 
-import { useActionState } from "react";
-import { signIn, type AuthFormState } from "@/lib/actions/auth";
+import { Suspense, useActionState } from "react";
+import { useSearchParams } from "next/navigation";
+import { signIn, signOut, type AuthFormState } from "@/lib/actions/auth";
 
 const initialState: AuthFormState = {};
+
+const URL_ERRORS: Record<string, string> = {
+  perfil:
+    "Iniciaste sesión, pero no se pudo leer tu perfil. Cierra la sesión e inténtalo de nuevo; si sigue igual, avisa al administrador.",
+  "sin-acceso":
+    "Esta cuenta no tiene acceso al panel administrativo. Entra con una cuenta de administrador.",
+};
+
+function UrlError() {
+  const code = useSearchParams().get("error");
+  if (!code) return null;
+  return (
+    <div className="mb-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+      <p>{URL_ERRORS[code] ?? "No se pudo abrir el panel."}</p>
+      <form action={signOut} className="mt-2">
+        <button type="submit" className="font-medium underline">
+          Cerrar sesión
+        </button>
+      </form>
+    </div>
+  );
+}
 
 export default function LoginPage() {
   const [state, action, pending] = useActionState(signIn, initialState);
@@ -17,6 +40,10 @@ export default function LoginPage() {
         <p className="mb-6 text-sm text-slate-500">
           Panel administrativo — inicia sesión
         </p>
+
+        <Suspense>
+          <UrlError />
+        </Suspense>
 
         <form action={action} className="space-y-4">
           <div>
