@@ -27,17 +27,17 @@ export default async function BoletosPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-lg font-semibold text-slate-900">Boletos</h1>
+        <h1 className="font-display text-lg font-bold text-slate-900">Boletos</h1>
         <p className="text-sm text-slate-500">
           Últimos 100 boletos vendidos, en todas las rutas.
         </p>
       </div>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
+      <section className="rounded-2xl border border-slate-200 bg-white shadow-xs p-4 sm:p-5">
         <div className="overflow-x-auto">
 <table className="w-full min-w-max text-sm">
           <thead>
-            <tr className="border-b border-slate-200 text-left text-slate-500">
+            <tr className="border-b border-slate-200 text-left text-[11px] font-bold uppercase tracking-wider text-slate-500">
               <th className="py-2">N.º boleto</th>
               <th className="py-2">Fecha</th>
               <th className="py-2">Ruta</th>

@@ -174,6 +174,7 @@ export function TicketScreen({
   }
 
   return (
+    <View style={{ flex: 1 }}>
     <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
       <Pressable onPress={onBack} style={styles.backButton}>
         <Text style={styles.backText}>‹ Viajes</Text>
@@ -260,6 +261,22 @@ export function TicketScreen({
         </Pressable>
       </View>
 
+      <View style={styles.footerActions}>
+        <Pressable style={styles.secondaryButton} onPress={onViewTickets}>
+          <Text style={styles.secondaryButtonText}>Ver boletos del viaje</Text>
+        </Pressable>
+        <Pressable
+          style={[styles.finishButton, finishing && styles.confirmButtonDisabled]}
+          onPress={handleFinish}
+          disabled={finishing}
+        >
+          <Text style={styles.finishButtonText}>
+            {finishing ? "Finalizando..." : "Finalizar viaje"}
+          </Text>
+        </Pressable>
+      </View>
+    </ScrollView>
+    <View style={styles.footerBar}>
       <View style={styles.totalBox}>
         <Text style={styles.totalLabel}>Total a cobrar</Text>
         <Text style={styles.totalValue}>
@@ -276,29 +293,24 @@ export function TicketScreen({
         disabled={!total || saving}
       >
         <Text style={styles.confirmButtonText}>
-          {saving ? "Guardando..." : "Confirmar cobro"}
+          {saving ? "Guardando..." : `Confirmar cobro${total !== null ? ` • ${formatCurrency(total)}` : ""}`}
         </Text>
       </Pressable>
 
-      <View style={styles.footerActions}>
-        <Pressable style={styles.secondaryButton} onPress={onViewTickets}>
-          <Text style={styles.secondaryButtonText}>Ver boletos del viaje</Text>
-        </Pressable>
-        <Pressable
-          style={[styles.finishButton, finishing && styles.confirmButtonDisabled]}
-          onPress={handleFinish}
-          disabled={finishing}
-        >
-          <Text style={styles.finishButtonText}>
-            {finishing ? "Finalizando..." : "Finalizar viaje"}
-          </Text>
-        </Pressable>
-      </View>
-    </ScrollView>
+    </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  footerBar: {
+    backgroundColor: "#fff",
+    borderTopWidth: 1,
+    borderTopColor: "#e2e8f0",
+    paddingHorizontal: 16,
+    paddingTop: 10,
+    paddingBottom: 14,
+  },
   overdue: {
     backgroundColor: "#fee2e2",
     borderColor: "#ef4444",
@@ -316,7 +328,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#cbd5e1",
     backgroundColor: "#fff",
-    borderRadius: 8,
+    borderRadius: 16,
     paddingVertical: 14,
     alignItems: "center",
   },
@@ -324,14 +336,14 @@ const styles = StyleSheet.create({
   finishButton: {
     borderWidth: 1,
     borderColor: "#dc2626",
-    borderRadius: 8,
+    borderRadius: 16,
     paddingVertical: 14,
     alignItems: "center",
   },
   finishButtonText: { color: "#dc2626", fontSize: 15, fontWeight: "600" },
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
   backButton: { marginBottom: 8 },
-  backText: { color: "#2a78d6", fontSize: 14 },
+  backText: { color: "#2563eb", fontSize: 14 },
   title: { fontSize: 18, fontWeight: "600", color: "#0f172a", marginBottom: 16 },
   sectionLabel: {
     fontSize: 12,
@@ -345,14 +357,14 @@ const styles = StyleSheet.create({
   chip: {
     borderWidth: 1,
     borderColor: "#cbd5e1",
-    borderRadius: 20,
+    borderRadius: 12,
     paddingHorizontal: 14,
     paddingVertical: 8,
     backgroundColor: "#fff",
   },
-  chipActive: { backgroundColor: "#0f172a", borderColor: "#0f172a" },
+  chipActive: { backgroundColor: "#2563eb", borderColor: "#0f172a" },
   directionButton: {
-    backgroundColor: "#0f172a",
+    backgroundColor: "#2563eb",
     borderRadius: 12,
     paddingVertical: 24,
     alignItems: "center",
@@ -362,7 +374,7 @@ const styles = StyleSheet.create({
   chipDisabled: { opacity: 0.4 },
   hint: { fontSize: 13, color: "#94a3b8" },
   chipText: { fontSize: 13, color: "#334155" },
-  chipTextActive: { color: "#fff" },
+  chipTextActive: { color: "#2563eb", fontWeight: "700" },
   stepper: { flexDirection: "row", alignItems: "center", gap: 16 },
   stepperButton: {
     width: 40,
@@ -377,23 +389,20 @@ const styles = StyleSheet.create({
   stepperButtonText: { fontSize: 20, color: "#0f172a" },
   stepperValue: { fontSize: 18, fontWeight: "600", color: "#0f172a", minWidth: 24, textAlign: "center" },
   totalBox: {
-    marginTop: 24,
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: "#e2e8f0",
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
+    paddingHorizontal: 4,
+    paddingBottom: 8,
   },
-  totalLabel: { fontSize: 13, color: "#64748b" },
-  totalValue: { fontSize: 28, fontWeight: "700", color: "#0f172a", marginTop: 4 },
+  totalLabel: { fontSize: 14, color: "#64748b" },
+  totalValue: { fontSize: 24, fontWeight: "800", color: "#0f172a" },
   confirmButton: {
-    backgroundColor: "#0f172a",
-    borderRadius: 8,
+    backgroundColor: "#2563eb",
+    borderRadius: 16,
     paddingVertical: 16,
     alignItems: "center",
-    marginTop: 20,
   },
   confirmButtonDisabled: { opacity: 0.5 },
-  confirmButtonText: { color: "#fff", fontSize: 16, fontWeight: "600" },
+  confirmButtonText: { color: "#fff", fontSize: 16, fontWeight: "800" },
 });

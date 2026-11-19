@@ -1,6 +1,6 @@
 "use client";
 
-/** Botón de opción grande para tocar con el dedo (como las "fichas" de la app móvil). */
+/** Opción grande para tocar con el dedo; la elegida se marca con borde azul. */
 export function Chip({
   label,
   active,
@@ -17,10 +17,10 @@ export function Chip({
       type="button"
       disabled={disabled}
       onClick={onClick}
-      className={`rounded-full border px-4 py-2.5 text-sm transition ${
+      className={`min-h-[44px] rounded-xl px-4 py-2 text-sm transition ${
         active
-          ? "border-slate-900 bg-slate-900 text-white"
-          : "border-slate-300 bg-white text-slate-700 active:bg-slate-100"
+          ? "border-2 border-blue-600 bg-blue-50/70 font-bold text-blue-600"
+          : "border border-slate-200 bg-white font-medium text-slate-700 active:bg-slate-50"
       } ${disabled ? "opacity-40" : ""}`}
     >
       {label}

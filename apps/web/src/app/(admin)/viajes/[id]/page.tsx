@@ -83,7 +83,7 @@ export default async function ViajeDetallePage({
         <Link href="/viajes" className="text-sm text-slate-500 hover:underline">
           ‹ Viajes
         </Link>
-        <h1 className="mt-1 text-lg font-semibold text-slate-900">
+        <h1 className="mt-1 font-display text-lg font-bold text-slate-900">
           {directionLabel(route, trip.direction)}
         </h1>
         <p className="text-sm text-slate-500">
@@ -101,14 +101,14 @@ export default async function ViajeDetallePage({
           {syncDelay !== null && syncDelay > 0 ? ` (${syncDelay} min después de finalizar)` : ""}
         </p>
         {isTripOverdue(trip) && (
-          <p className="mt-2 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+          <p className="mt-2 rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">
             Este viaje lleva {minutesOpen(trip)} min abierto (límite {TRIP_OPEN_ALERT_MINUTES} min).
           </p>
         )}
       </div>
 
       {missing.length > 0 && (
-        <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+        <p className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">
           Faltan boletos en la numeración de {cobrador?.full_name} ese día:{" "}
           {missing.map((n) => `${missingPrefix}-${String(n).padStart(4, "0")}`).join(", ")}. Pueden ser
           boletos aún sin sincronizar o cobros sin registrar.
@@ -121,18 +121,18 @@ export default async function ViajeDetallePage({
           { label: "Pasajeros", value: String(passengers) },
           { label: "Total cobrado", value: money(total) },
         ].map((stat) => (
-          <div key={stat.label} className="rounded-xl border border-slate-200 bg-white p-3 sm:p-4">
+          <div key={stat.label} className="rounded-2xl border border-slate-200 bg-white shadow-xs p-3 sm:p-4">
             <p className="text-xs text-slate-500">{stat.label}</p>
             <p className="mt-1 text-base font-semibold text-slate-900 sm:text-xl">{stat.value}</p>
           </div>
         ))}
       </div>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
+      <section className="rounded-2xl border border-slate-200 bg-white shadow-xs p-4 sm:p-5">
         <div className="overflow-x-auto">
 <table className="w-full min-w-max text-sm">
           <thead>
-            <tr className="border-b border-slate-200 text-left text-slate-500">
+            <tr className="border-b border-slate-200 text-left text-[11px] font-bold uppercase tracking-wider text-slate-500">
               <th className="py-2">N.º boleto</th>
               <th className="py-2">Hora</th>
               <th className="py-2">Sube en</th>

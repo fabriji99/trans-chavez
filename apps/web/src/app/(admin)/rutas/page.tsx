@@ -19,7 +19,7 @@ export default async function RutasPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-lg font-semibold text-slate-900">
+        <h1 className="font-display text-lg font-bold text-slate-900">
           Rutas y paradas
         </h1>
         <p className="text-sm text-slate-500">
@@ -27,8 +27,8 @@ export default async function RutasPage() {
         </p>
       </div>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
-        <h2 className="mb-3 text-sm font-medium text-slate-700">
+      <section className="rounded-2xl border border-slate-200 bg-white shadow-xs p-4 sm:p-5">
+        <h2 className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">
           Nueva ruta
         </h2>
         <form action={createRoute} className="grid grid-cols-1 gap-3 sm:grid-cols-3">
@@ -36,23 +36,23 @@ export default async function RutasPage() {
             name="name"
             placeholder="Nombre de la ruta"
             required
-            className="rounded-md border border-slate-300 px-3 py-2 text-sm"
+            className="rounded-xl border border-slate-200 bg-slate-50 focus:border-blue-600 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600/20 px-3 py-2 text-sm"
           />
           <input
             name="origin"
             placeholder="Origen"
             required
-            className="rounded-md border border-slate-300 px-3 py-2 text-sm"
+            className="rounded-xl border border-slate-200 bg-slate-50 focus:border-blue-600 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600/20 px-3 py-2 text-sm"
           />
           <input
             name="destination"
             placeholder="Destino"
             required
-            className="rounded-md border border-slate-300 px-3 py-2 text-sm"
+            className="rounded-xl border border-slate-200 bg-slate-50 focus:border-blue-600 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600/20 px-3 py-2 text-sm"
           />
           <button
             type="submit"
-            className="col-span-1 rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 sm:col-span-3 sm:w-fit"
+            className="col-span-1 rounded-xl bg-blue-600 px-4 py-2.5 font-display text-sm font-bold text-white shadow-md shadow-blue-600/20 hover:bg-blue-700 sm:col-span-3 sm:w-fit"
           >
             Crear ruta
           </button>
@@ -87,7 +87,7 @@ export default async function RutasPage() {
         return (
           <section
             key={route.id}
-            className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5"
+            className="rounded-2xl border border-slate-200 bg-white shadow-xs p-4 sm:p-5"
           >
             <h2 className="text-sm font-medium text-slate-900">
               {route.name}
@@ -117,7 +117,7 @@ export default async function RutasPage() {
                     name="name"
                     placeholder="Nombre de la parada"
                     required
-                    className="min-w-[10rem] flex-1 rounded-md border border-slate-300 px-2 py-1.5 text-sm"
+                    className="min-w-[10rem] flex-1 rounded-xl border border-slate-200 bg-slate-50 focus:border-blue-600 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600/20 px-2 py-1.5 text-sm"
                   />
                   <input
                     name="sequence"
@@ -125,11 +125,11 @@ export default async function RutasPage() {
                     min={1}
                     placeholder="#"
                     required
-                    className="w-16 rounded-md border border-slate-300 px-2 py-1.5 text-sm"
+                    className="w-16 rounded-xl border border-slate-200 bg-slate-50 focus:border-blue-600 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600/20 px-2 py-1.5 text-sm"
                   />
                   <button
                     type="submit"
-                    className="rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
+                    className="rounded-xl border border-slate-200 bg-slate-50 focus:border-blue-600 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600/20 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-100"
                   >
                     Agregar
                   </button>
@@ -167,14 +167,14 @@ export default async function RutasPage() {
                             min={0}
                             defaultValue={priceOf(s.id, dir)}
                             placeholder="—"
-                            className="rounded-md border border-slate-300 px-2 py-1.5 text-sm"
+                            className="rounded-xl border border-slate-200 bg-slate-50 focus:border-blue-600 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600/20 px-2 py-1.5 text-sm"
                           />
                         ))}
                       </div>
                     ))}
                     <button
                       type="submit"
-                      className="rounded-md bg-slate-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-800"
+                      className="rounded-xl bg-blue-600 px-3 py-2 font-display text-sm font-bold text-white hover:bg-blue-700"
                     >
                       Guardar precios
                     </button>

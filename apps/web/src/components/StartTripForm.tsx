@@ -3,10 +3,11 @@
 import { useState } from "react";
 import { startTrip } from "@/lib/actions/cobrador";
 import { Chip } from "./Chip";
+import { BottomAction } from "./BottomAction";
 import { directionLabel } from "@trans-chavez/shared";
 import type { Bus, Driver, Route, TripDirection } from "@trans-chavez/shared";
 
-const label = "mb-2 mt-5 text-xs font-semibold uppercase text-slate-500";
+const label = "mb-2 mt-5 text-xs font-bold uppercase tracking-wider text-slate-500";
 
 export function StartTripForm({
   routes,
@@ -27,7 +28,7 @@ export function StartTripForm({
   const ready = Boolean(routeId && direction && busId && driverId);
 
   return (
-    <form action={startTrip} onSubmit={() => setSending(true)}>
+    <form action={startTrip} onSubmit={() => setSending(true)} className="pb-24">
       <input type="hidden" name="route_id" value={routeId ?? ""} />
       <input type="hidden" name="direction" value={direction ?? ""} />
       <input type="hidden" name="bus_id" value={busId ?? ""} />
@@ -88,13 +89,15 @@ export function StartTripForm({
         La hora de salida se registra sola al iniciar el viaje.
       </p>
 
-      <button
-        type="submit"
-        disabled={!ready || sending}
-        className="mt-8 w-full rounded-xl bg-slate-900 py-4 text-base font-semibold text-white disabled:opacity-50"
-      >
-        {sending ? "Iniciando..." : "Iniciar viaje"}
-      </button>
+      <BottomAction>
+        <button
+          type="submit"
+          disabled={!ready || sending}
+          className="min-h-[54px] w-full rounded-2xl bg-blue-600 font-display text-base font-bold text-white shadow-lg shadow-blue-600/25 active:scale-[0.99] disabled:bg-slate-300 disabled:shadow-none"
+        >
+          {sending ? "Iniciando..." : "Iniciar viaje"}
+        </button>
+      </BottomAction>
     </form>
   );
 }

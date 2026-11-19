@@ -16,9 +16,9 @@ export function StatTile({
   isCurrency?: boolean;
 }) {
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-3 sm:p-5">
-      <p className="text-xs text-slate-500 sm:text-sm">{label}</p>
-      <p className="mt-1 text-xl font-semibold sm:text-2xl text-slate-900">
+    <div className="rounded-2xl border border-slate-200 bg-white shadow-xs p-3 sm:p-5">
+      <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500">{label}</p>
+      <p className="tabular mt-1 font-display text-xl font-extrabold tracking-tight text-slate-900 sm:text-2xl">
         {isCurrency ? formatCompact(value) : value.toLocaleString("es-HN")}
       </p>
     </div>

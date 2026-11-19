@@ -38,6 +38,6 @@ const styles = StyleSheet.create({
   title: { fontWeight: "700", color: "#92400e", fontSize: 14 },
   text: { color: "#92400e", fontSize: 12, marginTop: 2 },
   error: { color: "#b91c1c", fontSize: 12, marginTop: 4 },
-  button: { backgroundColor: "#f59e0b", borderRadius: 8, paddingHorizontal: 12, paddingVertical: 8 },
+  button: { backgroundColor: "#f59e0b", borderRadius: 16, paddingHorizontal: 12, paddingVertical: 8 },
   buttonText: { color: "#fff", fontWeight: "600", fontSize: 13 },
 });

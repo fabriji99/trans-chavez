@@ -10,23 +10,23 @@ export default async function BusesPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-lg font-semibold text-slate-900">Buses</h1>
+        <h1 className="font-display text-lg font-bold text-slate-900">Buses</h1>
         <p className="text-sm text-slate-500">Flota de unidades disponibles.</p>
       </div>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
-        <h2 className="mb-3 text-sm font-medium text-slate-700">Nuevo bus</h2>
+      <section className="rounded-2xl border border-slate-200 bg-white shadow-xs p-4 sm:p-5">
+        <h2 className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-500">Nuevo bus</h2>
         <form action={createBus} className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <input
             name="plate"
             placeholder="Placa"
             required
-            className="rounded-md border border-slate-300 px-3 py-2 text-sm"
+            className="rounded-xl border border-slate-200 bg-slate-50 focus:border-blue-600 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600/20 px-3 py-2 text-sm"
           />
           <input
             name="name"
             placeholder="Nombre / alias (opcional)"
-            className="rounded-md border border-slate-300 px-3 py-2 text-sm"
+            className="rounded-xl border border-slate-200 bg-slate-50 focus:border-blue-600 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600/20 px-3 py-2 text-sm"
           />
           <input
             name="capacity"
@@ -34,22 +34,22 @@ export default async function BusesPage() {
             min={1}
             defaultValue={40}
             placeholder="Capacidad"
-            className="rounded-md border border-slate-300 px-3 py-2 text-sm"
+            className="rounded-xl border border-slate-200 bg-slate-50 focus:border-blue-600 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600/20 px-3 py-2 text-sm"
           />
           <button
             type="submit"
-            className="col-span-1 rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 sm:col-span-3 sm:w-fit"
+            className="col-span-1 rounded-xl bg-blue-600 px-4 py-2.5 font-display text-sm font-bold text-white shadow-md shadow-blue-600/20 hover:bg-blue-700 sm:col-span-3 sm:w-fit"
           >
             Crear bus
           </button>
         </form>
       </section>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
+      <section className="rounded-2xl border border-slate-200 bg-white shadow-xs p-4 sm:p-5">
         <div className="overflow-x-auto">
 <table className="w-full min-w-max text-sm">
           <thead>
-            <tr className="border-b border-slate-200 text-left text-slate-500">
+            <tr className="border-b border-slate-200 text-left text-[11px] font-bold uppercase tracking-wider text-slate-500">
               <th className="py-2">Placa</th>
               <th className="py-2">Nombre</th>
               <th className="py-2">Capacidad</th>

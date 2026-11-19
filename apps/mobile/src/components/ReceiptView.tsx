@@ -71,7 +71,11 @@ export function ReceiptView({ data, onDone }: { data: ReceiptData; onDone: () =>
 
   return (
     <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
-      <Text style={styles.title}>Boleto vendido</Text>
+      <View style={styles.banner}>
+        <Text style={styles.bannerCheck}>✓</Text>
+        <Text style={styles.bannerTitle}>Boleto vendido</Text>
+        <Text style={styles.bannerNumber}>{data.ticketNumber}</Text>
+      </View>
 
       <View style={styles.paper}>
         <Text style={styles.paperText}>{buildReceiptLines(data).join("\n")}</Text>
@@ -136,26 +140,34 @@ export function ReceiptView({ data, onDone }: { data: ReceiptData; onDone: () =>
 const styles = StyleSheet.create({
   scroll: { flex: 1, backgroundColor: "#f8fafc" },
   content: { padding: 20, paddingBottom: 40, gap: 12 },
-  title: { fontSize: 20, fontWeight: "700", color: "#0f172a" },
+  banner: {
+    backgroundColor: "#10b981",
+    borderRadius: 20,
+    paddingVertical: 16,
+    alignItems: "center",
+  },
+  bannerCheck: { color: "#fff", fontSize: 28, fontWeight: "800" },
+  bannerTitle: { color: "#fff", fontSize: 18, fontWeight: "800", marginTop: 2 },
+  bannerNumber: { color: "#ecfdf5", fontSize: 12, marginTop: 2, fontFamily: "Courier" },
   paper: {
     backgroundColor: "#fff",
     borderWidth: 1,
     borderColor: "#e2e8f0",
-    borderRadius: 8,
+    borderRadius: 16,
     padding: 16,
     alignSelf: "center",
   },
   paperText: { fontFamily: "Courier", fontSize: 12, color: "#0f172a", lineHeight: 17 },
   ok: { color: "#16a34a", fontWeight: "600", textAlign: "center" },
   error: { color: "#dc2626", textAlign: "center" },
-  primary: { backgroundColor: "#0f172a", borderRadius: 8, paddingVertical: 16, alignItems: "center" },
-  primaryText: { color: "#fff", fontSize: 16, fontWeight: "600" },
+  primary: { backgroundColor: "#2563eb", borderRadius: 16, paddingVertical: 16, alignItems: "center" },
+  primaryText: { color: "#fff", fontSize: 16, fontWeight: "800" },
   disabled: { opacity: 0.5 },
   secondary: {
     borderWidth: 1,
     borderColor: "#cbd5e1",
     backgroundColor: "#fff",
-    borderRadius: 8,
+    borderRadius: 16,
     paddingVertical: 14,
     alignItems: "center",
     marginTop: 4,
@@ -163,7 +175,7 @@ const styles = StyleSheet.create({
   secondaryText: { color: "#0f172a", fontSize: 15, fontWeight: "600" },
   printerBox: { marginTop: 12, gap: 8 },
   label: { fontSize: 13, color: "#64748b" },
-  link: { color: "#2a78d6", fontSize: 14, marginTop: 6 },
+  link: { color: "#2563eb", fontSize: 14, marginTop: 6 },
   device: { padding: 12, borderBottomWidth: 1, borderBottomColor: "#e2e8f0", backgroundColor: "#fff" },
   deviceText: { fontSize: 15, color: "#0f172a" },
 });

@@ -177,7 +177,7 @@ export function HomeScreen({
                 })}
               </Text>
               <View style={styles.cardFooter}>
-                <Text style={styles.cardStatus}>
+                <Text style={[styles.cardStatus, item.trip.status === "in_progress" ? styles.statusActive : styles.statusDone]}>
                   {STATUS_LABEL[item.trip.status]}
                   {item.trip.status === "completed" ? " · ver boletos" : ""}
                   {isTripOverdue(item.trip) ? ` · más de ${TRIP_OPEN_ALERT_MINUTES} min abierto` : ""}
@@ -207,17 +207,17 @@ const styles = StyleSheet.create({
   logout: { fontSize: 13, color: "#64748b" },
   notice: { fontSize: 13, color: "#b45309", marginBottom: 12 },
   startButton: {
-    backgroundColor: "#0f172a",
-    borderRadius: 10,
+    backgroundColor: "#2563eb",
+    borderRadius: 16,
     paddingVertical: 16,
     alignItems: "center",
     marginBottom: 16,
   },
-  startButtonText: { color: "#fff", fontSize: 16, fontWeight: "600" },
+  startButtonText: { color: "#fff", fontSize: 16, fontWeight: "800" },
   empty: { textAlign: "center", color: "#94a3b8", marginTop: 40 },
   card: {
     backgroundColor: "#fff",
-    borderRadius: 12,
+    borderRadius: 16,
     padding: 16,
     borderWidth: 1,
     borderColor: "#e2e8f0",
@@ -227,12 +227,18 @@ const styles = StyleSheet.create({
   cardFooter: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
     marginTop: 12,
   },
   cardStatus: {
-    fontSize: 12,
-    fontWeight: "600",
-    color: "#2a78d6",
+    fontSize: 11,
+    fontWeight: "700",
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    borderRadius: 999,
+    overflow: "hidden",
   },
+  statusActive: { backgroundColor: "#ecfdf5", color: "#059669" },
+  statusDone: { backgroundColor: "#f1f5f9", color: "#475569" },
   cardStats: { fontSize: 12, color: "#475569" },
 });

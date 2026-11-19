@@ -45,18 +45,29 @@ export default async function ViajePage({ params }: { params: Promise<{ id: stri
   const inProgress = trip.status === "in_progress";
 
   return (
-    <div>
-      <Link href="/cobrador" className="text-sm text-blue-600">
+    <div className={inProgress ? "pb-20" : ""}>
+      <Link href="/cobrador" className="text-sm font-semibold text-blue-600">
         ‹ Viajes
       </Link>
-      <h1 className="mt-2 text-lg font-semibold text-slate-900">{directionLabel(route, trip.direction)}</h1>
-      <p className="mb-4 text-sm text-slate-500">
-        {inProgress ? "En curso" : "Finalizado"} ·{" "}
-        {new Date(trip.departure_at).toLocaleTimeString("es-HN", { timeZone: TZ, hour: "2-digit", minute: "2-digit" })}
-      </p>
+      <h1 className="mt-2 font-display text-lg font-bold text-slate-900">{directionLabel(route, trip.direction)}</h1>
+      <div className="mb-4 mt-1 flex items-center gap-2 text-sm text-slate-500">
+        {inProgress ? (
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-700">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
+            En curso
+          </span>
+        ) : (
+          <span className="rounded-full border border-slate-200 bg-slate-100 px-2.5 py-0.5 text-[11px] font-semibold text-slate-600">
+            Finalizado
+          </span>
+        )}
+        <span className="tabular">
+          {new Date(trip.departure_at).toLocaleTimeString("es-HN", { timeZone: TZ, hour: "2-digit", minute: "2-digit" })}
+        </span>
+      </div>
 
       {inProgress && isTripOverdue(trip) && (
-        <div className="mb-4 rounded-lg border border-red-400 bg-red-50 p-3 text-sm font-semibold text-red-800">
+        <div className="mb-4 rounded-2xl border border-amber-200 bg-amber-50 p-3 text-sm font-semibold text-amber-800">
           Este viaje lleva más de {TRIP_OPEN_ALERT_MINUTES} minutos abierto. Si ya terminó, finalízalo.
         </div>
       )}
@@ -76,21 +87,21 @@ export default async function ViajePage({ params }: { params: Promise<{ id: stri
           { label: "Pasajeros", value: String(passengers) },
           { label: "Cobrado", value: money(total) },
         ].map((s) => (
-          <div key={s.label} className="rounded-xl border border-slate-200 bg-white p-3 text-center">
-            <p className="text-xs text-slate-500">{s.label}</p>
-            <p className="mt-1 text-base font-semibold text-slate-900">{s.value}</p>
+          <div key={s.label} className="rounded-2xl border border-slate-200 bg-white p-3 text-center shadow-xs">
+            <p className="text-[11px] font-semibold text-slate-500">{s.label}</p>
+            <p className="tabular mt-1 font-display text-base font-extrabold text-slate-900">{s.value}</p>
           </div>
         ))}
       </div>
 
-      <h2 className="mb-2 mt-6 text-sm font-semibold text-slate-700">Boletos del viaje</h2>
+      <h2 className="mb-2 mt-6 text-xs font-bold uppercase tracking-wider text-slate-500">Boletos del viaje</h2>
       <div className="space-y-2">
         {tickets.length === 0 && <p className="py-4 text-center text-sm text-slate-400">Aún no hay boletos.</p>}
         {tickets.map((t) => (
-          <div key={t.id} className="rounded-lg border border-slate-200 bg-white p-3 text-sm">
+          <div key={t.id} className="rounded-2xl border border-slate-200 bg-white p-3 text-sm shadow-xs">
             <div className="flex justify-between">
-              <span className="font-medium text-slate-900">{t.ticket_number ?? "—"}</span>
-              <span className="font-semibold text-slate-900">{money(t.fare_amount * t.passenger_count)}</span>
+              <span className="font-mono text-xs font-bold text-slate-900">{t.ticket_number ?? "—"}</span>
+              <span className="tabular font-display font-bold text-slate-900">{money(t.fare_amount * t.passenger_count)}</span>
             </div>
             <p className="mt-0.5 text-slate-500">
               {stopName.get(t.boarding_stop_id) ?? "—"} → {stopName.get(t.alighting_stop_id) ?? "—"} ·{" "}

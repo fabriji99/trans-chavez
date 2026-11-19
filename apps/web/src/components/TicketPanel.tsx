@@ -3,6 +3,7 @@
 import { useMemo, useState, useTransition } from "react";
 import { createTicket } from "@/lib/actions/cobrador";
 import { Chip } from "./Chip";
+import { BottomAction } from "./BottomAction";
 import {
   buildReceiptLines,
   calculateSegmentPrice,
@@ -13,7 +14,8 @@ import {
 import type { ReceiptData, Stop, StopPrice, TripDirection } from "@trans-chavez/shared";
 
 const money = (n: number) => `L ${n.toFixed(2)}`;
-const label = "mb-2 mt-5 text-xs font-semibold uppercase text-slate-500";
+const label = "mb-2 text-xs font-bold uppercase tracking-wider text-slate-500";
+const card = "rounded-2xl border border-slate-200 bg-white p-3.5 shadow-xs";
 
 export function TicketPanel({
   tripId,
@@ -65,99 +67,130 @@ export function TicketPanel({
     });
   }
 
-  if (receipt) {
-    return (
-      <div>
-        <p className="mb-3 text-center text-sm font-semibold text-green-700">Boleto registrado</p>
-        <pre className="print-receipt mx-auto w-fit rounded-lg border border-slate-200 bg-white p-4 font-mono text-xs leading-5 text-slate-900">
-          {buildReceiptLines(receipt).join("\n")}
-        </pre>
-        <button
-          type="button"
-          onClick={() => window.print()}
-          className="mt-4 w-full rounded-xl border border-slate-300 bg-white py-3.5 text-base font-semibold text-slate-900"
-        >
-          Imprimir / guardar PDF
-        </button>
-        <button
-          type="button"
-          onClick={() => setReceipt(null)}
-          className="mt-3 w-full rounded-xl bg-slate-900 py-4 text-base font-semibold text-white"
-        >
-          Listo, nuevo cobro
-        </button>
-      </div>
-    );
-  }
-
   return (
-    <div>
-      <p className={label.replace("mt-5", "mt-1")}>Sube en</p>
-      <div className="flex flex-wrap gap-2">
-        {ordered.slice(0, -1).map((stop) => (
-          <Chip
-            key={stop.id}
-            label={stop.name}
-            active={boardingId === stop.id}
-            onClick={() => {
-              setBoardingId(stop.id);
-              setAlightingId(null);
-            }}
-          />
-        ))}
-      </div>
-
-      <p className={label}>Baja en</p>
-      {boardingId ? (
+    <div className="pb-2">
+      <div className={card}>
+        <p className={label}>Sube en</p>
         <div className="flex flex-wrap gap-2">
-          {alightingOptions.map(({ stop, price }) => (
+          {ordered.slice(0, -1).map((stop) => (
             <Chip
               key={stop.id}
-              label={`${stop.name}  ·  ${price !== null ? money(price) : "sin precio"}`}
-              active={alightingId === stop.id}
-              disabled={price === null}
-              onClick={() => setAlightingId(stop.id)}
+              label={stop.name}
+              active={boardingId === stop.id}
+              onClick={() => {
+                setBoardingId(stop.id);
+                setAlightingId(null);
+              }}
             />
           ))}
         </div>
-      ) : (
-        <p className="text-sm text-slate-400">Primero elige dónde sube el pasajero.</p>
+      </div>
+
+      <div className={`${card} mt-3`}>
+        <p className={label}>Baja en</p>
+        {boardingId ? (
+          <div className="flex flex-wrap gap-2">
+            {alightingOptions.map(({ stop, price }) => (
+              <Chip
+                key={stop.id}
+                label={`${stop.name}  ·  ${price !== null ? money(price) : "sin precio"}`}
+                active={alightingId === stop.id}
+                disabled={price === null}
+                onClick={() => setAlightingId(stop.id)}
+              />
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-slate-400">Primero elige dónde sube el pasajero.</p>
+        )}
+      </div>
+
+      <div className={`${card} mt-3 flex items-center justify-between`}>
+        <p className="text-xs font-bold uppercase tracking-wider text-slate-500">Pasajeros</p>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setPassengers((n) => Math.max(1, n - 1))}
+            aria-label="Quitar pasajero"
+            className="flex h-12 w-12 items-center justify-center rounded-xl border border-slate-200 bg-slate-100 font-display text-xl font-bold text-slate-900 active:scale-95"
+          >
+            −
+          </button>
+          <span className="tabular w-8 text-center font-display text-lg font-extrabold text-slate-900">{passengers}</span>
+          <button
+            type="button"
+            onClick={() => setPassengers((n) => Math.min(99, n + 1))}
+            aria-label="Agregar pasajero"
+            className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600 font-display text-xl font-bold text-white active:scale-95"
+          >
+            +
+          </button>
+        </div>
+      </div>
+
+      <div className={`${card} mt-3 flex items-center justify-between`}>
+        <span className="text-sm text-slate-500">Total a cobrar</span>
+        <span className="tabular font-display text-2xl font-extrabold text-slate-900">
+          {total !== null ? money(total) : "—"}
+        </span>
+      </div>
+
+      {error && (
+        <p className="mt-3 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
       )}
 
-      <p className={label}>Pasajeros</p>
-      <div className="flex items-center gap-5">
+      <BottomAction>
         <button
           type="button"
-          onClick={() => setPassengers((n) => Math.max(1, n - 1))}
-          className="h-12 w-12 rounded-full border border-slate-300 bg-white text-2xl text-slate-900"
+          onClick={confirm}
+          disabled={!total || pending}
+          className="tabular flex min-h-[54px] w-full items-center justify-center gap-2 rounded-2xl bg-blue-600 font-display text-base font-bold text-white shadow-lg shadow-blue-600/25 active:scale-[0.99] disabled:bg-slate-300 disabled:shadow-none"
         >
-          −
+          <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+          {pending ? "Guardando..." : `Confirmar cobro${total !== null ? ` • ${money(total)}` : ""}`}
         </button>
-        <span className="min-w-6 text-center text-xl font-semibold text-slate-900">{passengers}</span>
-        <button
-          type="button"
-          onClick={() => setPassengers((n) => Math.min(99, n + 1))}
-          className="h-12 w-12 rounded-full border border-slate-300 bg-white text-2xl text-slate-900"
-        >
-          +
-        </button>
-      </div>
+      </BottomAction>
 
-      <div className="mt-6 rounded-xl border border-slate-200 bg-white p-4 text-center">
-        <p className="text-sm text-slate-500">Total a cobrar</p>
-        <p className="mt-1 text-3xl font-bold text-slate-900">{total !== null ? money(total) : "—"}</p>
-      </div>
+      {receipt && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/65 p-3 backdrop-blur-xs sm:items-center">
+          <div className="animate-slide-up flex max-h-[92%] w-full max-w-md flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl">
+            <div className="bg-emerald-500 px-5 py-4 text-center text-white">
+              <div className="mx-auto mb-1.5 flex h-11 w-11 items-center justify-center rounded-full bg-white/20">
+                <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+              <h3 className="font-display text-lg font-extrabold tracking-tight">Boleto registrado</h3>
+              <p className="mt-0.5 font-mono text-xs text-emerald-50">{receipt.ticketNumber}</p>
+            </div>
 
-      {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
+            <div className="overflow-y-auto p-4 no-scrollbar">
+              <pre className="print-receipt mx-auto w-fit rounded-2xl border border-slate-200 bg-slate-50 p-4 font-mono text-xs leading-5 text-slate-900">
+                {buildReceiptLines(receipt).join("\n")}
+              </pre>
+            </div>
 
-      <button
-        type="button"
-        onClick={confirm}
-        disabled={!total || pending}
-        className="mt-4 w-full rounded-xl bg-slate-900 py-4 text-base font-semibold text-white disabled:opacity-50"
-      >
-        {pending ? "Guardando..." : "Confirmar cobro"}
-      </button>
+            <div className="grid grid-cols-2 gap-2 border-t border-slate-200 bg-slate-50 p-3.5">
+              <button
+                type="button"
+                onClick={() => window.print()}
+                className="min-h-[48px] rounded-xl border border-slate-300 bg-white font-display text-xs font-bold text-slate-900 hover:bg-slate-100"
+              >
+                Imprimir / PDF
+              </button>
+              <button
+                type="button"
+                onClick={() => setReceipt(null)}
+                className="min-h-[48px] rounded-xl bg-blue-600 font-display text-xs font-bold text-white shadow-md shadow-blue-600/20 hover:bg-blue-700"
+              >
+                Nuevo cobro +
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

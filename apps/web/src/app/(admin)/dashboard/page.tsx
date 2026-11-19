@@ -120,14 +120,14 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-lg font-semibold text-slate-900">Dashboard</h1>
+        <h1 className="font-display text-lg font-bold text-slate-900">Dashboard</h1>
         <p className="text-sm text-slate-500">
           Resumen de {MONTHS[month - 1]} {year}: del 1 al {daysElapsed}{" "}
           ({daysElapsed} {daysElapsed === 1 ? "día" : "días"}).
         </p>
       </div>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
+      <section className="rounded-2xl border border-slate-200 bg-white shadow-xs p-4 sm:p-5">
         <p className="mb-4 text-xs text-slate-500">
           {change === null
             ? `Sin datos de ${MONTHS[prevMonth - 1]} para comparar`
@@ -144,7 +144,7 @@ export default async function DashboardPage() {
           <div className="overflow-x-auto">
 <table className="mt-4 w-full min-w-max text-sm">
             <thead>
-              <tr className="border-b border-slate-200 text-left text-slate-500">
+              <tr className="border-b border-slate-200 text-left text-[11px] font-bold uppercase tracking-wider text-slate-500">
                 <th className="py-2">Cobrador</th>
                 <th className="py-2 text-right">Viajes</th>
                 <th className="py-2 text-right">Boletos</th>
@@ -166,20 +166,20 @@ export default async function DashboardPage() {
         )}
       </section>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
-        <h2 className="mb-4 text-sm font-medium text-slate-700">Ingresos por día</h2>
+      <section className="rounded-2xl border border-slate-200 bg-white shadow-xs p-4 sm:p-5">
+        <h2 className="mb-4 text-xs font-bold uppercase tracking-wider text-slate-500">Ingresos por día</h2>
         <RevenueBarChart data={byDay} />
       </section>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
-        <h2 className="mb-4 text-sm font-medium text-slate-700">Ingresos por ruta</h2>
+      <section className="rounded-2xl border border-slate-200 bg-white shadow-xs p-4 sm:p-5">
+        <h2 className="mb-4 text-xs font-bold uppercase tracking-wider text-slate-500">Ingresos por ruta</h2>
         <RevenueBarChart
           data={byRoute.map((r) => ({ label: r.name, total_revenue: r.revenue }))}
         />
         <div className="overflow-x-auto">
 <table className="mt-4 w-full min-w-max text-sm">
           <thead>
-            <tr className="border-b border-slate-200 text-left text-slate-500">
+            <tr className="border-b border-slate-200 text-left text-[11px] font-bold uppercase tracking-wider text-slate-500">
               <th className="py-2">Ruta</th>
               <th className="py-2">Viajes</th>
               <th className="py-2">Boletos</th>

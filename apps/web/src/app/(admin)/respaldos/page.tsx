@@ -19,19 +19,19 @@ export default function RespaldosPage() {
   });
 
   const linkClass =
-    "rounded-md border border-slate-300 px-3 py-1 text-xs text-slate-700 hover:bg-slate-50";
+    "rounded-xl border border-slate-200 bg-slate-50 focus:border-blue-600 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600/20 px-3 py-1 text-xs text-slate-700 hover:bg-slate-50";
 
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-lg font-semibold text-slate-900">Respaldos</h1>
+        <h1 className="font-display text-lg font-bold text-slate-900">Respaldos</h1>
         <p className="text-sm text-slate-500">
           Descarga los viajes y boletos de un mes en un archivo que abre en Excel. Se recomienda
           descargar el del mes anterior los primeros días de cada mes y guardarlo fuera del sistema.
         </p>
       </div>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
+      <section className="rounded-2xl border border-slate-200 bg-white shadow-xs p-4 sm:p-5">
         <div className="overflow-x-auto">
 <table className="w-full min-w-max text-sm">
           <tbody>

@@ -47,20 +47,20 @@ export default async function CobradorHome() {
 
   return (
     <div>
-      <h1 className="text-lg font-semibold text-slate-900">Hola, {profile.full_name}</h1>
+      <h1 className="font-display text-lg font-bold text-slate-900">Hola, {profile.full_name}</h1>
       <p className="mb-4 text-sm text-slate-500">Tus viajes de hoy</p>
 
       {inProgress ? (
         <Link
           href={`/cobrador/viaje/${inProgress.id}`}
-          className="mb-4 block rounded-xl bg-slate-900 px-4 py-4 text-center text-base font-semibold text-white"
+          className="mb-4 block min-h-[54px] rounded-2xl bg-blue-600 px-4 py-4 text-center font-display text-base font-bold text-white shadow-lg shadow-blue-600/25 active:scale-[0.99]"
         >
           Seguir cobrando el viaje en curso
         </Link>
       ) : (
         <Link
           href="/cobrador/iniciar"
-          className="mb-4 block rounded-xl bg-slate-900 px-4 py-4 text-center text-base font-semibold text-white"
+          className="mb-4 block min-h-[54px] rounded-2xl bg-blue-600 px-4 py-4 text-center font-display text-base font-bold text-white shadow-lg shadow-blue-600/25 active:scale-[0.99]"
         >
           Iniciar viaje
         </Link>
@@ -79,9 +79,9 @@ export default async function CobradorHome() {
             <Link
               key={trip.id}
               href={`/cobrador/viaje/${trip.id}`}
-              className="block rounded-xl border border-slate-200 bg-white p-4"
+              className="block rounded-2xl border border-slate-200 bg-white p-4 shadow-xs"
             >
-              <p className="font-semibold text-slate-900">{route?.name ?? "—"}</p>
+              <p className="font-display font-bold text-slate-900">{route?.name ?? "—"}</p>
               <p className="mt-0.5 text-sm text-slate-500">
                 Bus {busById.get(trip.bus_id)?.plate ?? "—"} ·{" "}
                 {new Date(trip.departure_at).toLocaleTimeString("es-HN", {
@@ -90,12 +90,19 @@ export default async function CobradorHome() {
                   minute: "2-digit",
                 })}
               </p>
-              <div className="mt-3 flex items-center justify-between text-xs">
-                <span className="font-semibold text-blue-600">
-                  {trip.status === "in_progress" ? "En curso" : "Finalizado · ver boletos"}
-                  {isTripOverdue(trip) ? ` · más de ${TRIP_OPEN_ALERT_MINUTES} min abierto` : ""}
-                </span>
-                <span className="text-slate-600">
+              <div className="mt-3 flex items-center justify-between gap-2 text-xs">
+                {trip.status === "in_progress" ? (
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-700">
+                    <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
+                    En curso
+                    {isTripOverdue(trip) ? ` · más de ${TRIP_OPEN_ALERT_MINUTES} min` : ""}
+                  </span>
+                ) : (
+                  <span className="rounded-full border border-slate-200 bg-slate-100 px-2.5 py-0.5 text-[11px] font-semibold text-slate-600">
+                    Finalizado · ver boletos
+                  </span>
+                )}
+                <span className="tabular font-semibold text-slate-700">
                   {s.count} {s.count === 1 ? "boleto" : "boletos"} · {money(s.total)}
                 </span>
               </div>

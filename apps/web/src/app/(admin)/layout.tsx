@@ -1,6 +1,7 @@
-import Link from "next/link";
 import { requireAdmin } from "@/lib/dal";
 import { signOut } from "@/lib/actions/auth";
+import { BrandMark } from "@/components/BrandMark";
+import { AdminNav } from "@/components/AdminNav";
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Dashboard" },
@@ -22,31 +23,26 @@ export default async function AdminLayout({
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-4 px-4 py-3 sm:px-6 md:py-4">
-          <span className="font-semibold text-slate-900">Trans. Chávez</span>
+      <header className="sticky top-0 z-10 border-b border-slate-200 bg-white/90 backdrop-blur-md">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-4 px-4 py-2.5 sm:px-6">
+          <div className="flex items-center gap-2.5">
+            <BrandMark />
+            <span className="font-display text-sm font-bold tracking-tight text-slate-900">Trans. Chávez</span>
+          </div>
 
-          <div className="flex items-center gap-3 text-sm text-slate-600 md:order-3 md:gap-4">
-            <span className="max-w-[9rem] truncate md:max-w-none">{profile.full_name}</span>
+          <div className="flex items-center gap-2 text-sm md:order-3">
+            <span className="max-w-[9rem] truncate rounded-full border border-slate-200 bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-800 md:max-w-none">
+              {profile.full_name}
+            </span>
             <form action={signOut}>
-              <button type="submit" className="text-slate-500 hover:text-slate-900">
+              <button type="submit" className="rounded-lg px-2 py-1 text-xs font-semibold text-slate-500 hover:text-blue-600">
                 Salir
               </button>
             </form>
           </div>
 
           {/* En teléfono el menú ocupa su propia fila y se desliza de lado */}
-          <nav className="mt-2 flex w-full gap-1 overflow-x-auto pb-1 text-sm text-slate-600 md:order-2 md:mt-0 md:ml-8 md:w-auto md:flex-1 md:gap-4 md:overflow-visible md:pb-0">
-            {NAV_ITEMS.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="whitespace-nowrap rounded-md px-3 py-2 hover:bg-slate-100 hover:text-slate-900 md:p-0 md:hover:bg-transparent"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
+          <AdminNav items={NAV_ITEMS} />
         </div>
       </header>
       <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8">{children}</main>

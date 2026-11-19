@@ -26,10 +26,10 @@ export default async function IniciarViajePage() {
 
   return (
     <div>
-      <Link href="/cobrador" className="text-sm text-blue-600">
+      <Link href="/cobrador" className="text-sm font-semibold text-blue-600">
         ‹ Viajes
       </Link>
-      <h1 className="mt-2 text-lg font-semibold text-slate-900">Iniciar viaje</h1>
+      <h1 className="mt-2 font-display text-lg font-bold text-slate-900">Iniciar viaje</h1>
       <StartTripForm
         routes={(routes as Route[] | null) ?? []}
         buses={(buses as Bus[] | null) ?? []}
