@@ -10,7 +10,7 @@ const URL_ERRORS: Record<string, string> = {
   perfil:
     "Iniciaste sesión, pero no se pudo leer tu perfil. Cierra la sesión e inténtalo de nuevo; si sigue igual, avisa al administrador.",
   "sin-acceso":
-    "Esta cuenta no tiene acceso al panel administrativo. Entra con una cuenta de administrador.",
+    "Esta cuenta no tiene acceso. Avisa al administrador.",
 };
 
 function UrlError() {
@@ -38,7 +38,7 @@ export default function LoginPage() {
           Trans. Chávez
         </h1>
         <p className="mb-6 text-sm text-slate-500">
-          Panel administrativo — inicia sesión
+          Inicia sesión
         </p>
 
         <Suspense>

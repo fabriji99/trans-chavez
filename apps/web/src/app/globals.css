@@ -31,3 +31,13 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Imprimir solo el boleto (papel de 58 mm) */
+@media print {
+  body * { visibility: hidden; }
+  .print-receipt, .print-receipt * { visibility: visible; }
+  .print-receipt {
+    position: absolute; left: 0; top: 0; width: 58mm;
+    font-family: ui-monospace, monospace; font-size: 11px; color: #000; background: #fff;
+  }
+}

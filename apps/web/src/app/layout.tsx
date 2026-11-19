@@ -13,8 +13,14 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Trans. Chávez — Panel administrativo",
+  title: "Trans. Chávez",
   description: "Cobro y reportes de la ruta intermunicipal Trans. Chávez",
+};
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#0f172a",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

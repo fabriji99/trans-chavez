@@ -30,7 +30,7 @@ export async function signIn(
     return { error: "Credenciales inválidas." };
   }
 
-  redirect("/dashboard");
+  redirect("/");
 }
 
 export async function signOut() {

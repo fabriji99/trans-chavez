@@ -36,6 +36,30 @@ export async function requireAdmin(): Promise<Profile> {
     console.error("requireAdmin: no se pudo leer el perfil", error?.message);
     redirect("/login?error=perfil");
   }
-  if ((profile as Profile).role !== "admin") redirect("/login?error=sin-acceso");
-  return profile as Profile;
+  const p = profile as Profile;
+  if (p.role === "cobrador") redirect("/cobrador");
+  if (p.role !== "admin") redirect("/login?error=sin-acceso");
+  return p;
+}
+
+/** Cobrador con sesión; un administrador que llegue aquí se manda a su panel. */
+export async function requireCobrador(): Promise<Profile> {
+  const supabase = await createSupabaseServerClient();
+  const { data: userData } = await supabase.auth.getUser();
+  if (!userData.user) redirect("/login");
+
+  const { data: profile, error } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", userData.user.id)
+    .single();
+
+  if (error || !profile) {
+    console.error("requireCobrador: no se pudo leer el perfil", error?.message);
+    redirect("/login?error=perfil");
+  }
+  const p = profile as Profile;
+  if (p.role === "admin") redirect("/dashboard");
+  if (p.role !== "cobrador") redirect("/login?error=sin-acceso");
+  return p;
 }
