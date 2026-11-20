@@ -138,7 +138,7 @@ export function ReceiptView({ data, onDone }: { data: ReceiptData; onDone: () =>
 }
 
 const styles = StyleSheet.create({
-  scroll: { flex: 1, backgroundColor: "#f8fafc" },
+  scroll: { flex: 1, backgroundColor: "#f3f8f7" },
   content: { padding: 20, paddingBottom: 40, gap: 12 },
   banner: {
     backgroundColor: "#10b981",
@@ -152,30 +152,30 @@ const styles = StyleSheet.create({
   paper: {
     backgroundColor: "#fff",
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: "#dce7e4",
     borderRadius: 16,
     padding: 16,
     alignSelf: "center",
   },
-  paperText: { fontFamily: "Courier", fontSize: 12, color: "#0f172a", lineHeight: 17 },
+  paperText: { fontFamily: "Courier", fontSize: 12, color: "#0e2a47", lineHeight: 17 },
   ok: { color: "#16a34a", fontWeight: "600", textAlign: "center" },
   error: { color: "#dc2626", textAlign: "center" },
-  primary: { backgroundColor: "#2563eb", borderRadius: 16, paddingVertical: 16, alignItems: "center" },
+  primary: { backgroundColor: "#0f8a7d", borderRadius: 16, paddingVertical: 16, alignItems: "center" },
   primaryText: { color: "#fff", fontSize: 16, fontWeight: "800" },
   disabled: { opacity: 0.5 },
   secondary: {
     borderWidth: 1,
-    borderColor: "#cbd5e1",
+    borderColor: "#b8ccc8",
     backgroundColor: "#fff",
     borderRadius: 16,
     paddingVertical: 14,
     alignItems: "center",
     marginTop: 4,
   },
-  secondaryText: { color: "#0f172a", fontSize: 15, fontWeight: "600" },
+  secondaryText: { color: "#0e2a47", fontSize: 15, fontWeight: "600" },
   printerBox: { marginTop: 12, gap: 8 },
-  label: { fontSize: 13, color: "#64748b" },
-  link: { color: "#2563eb", fontSize: 14, marginTop: 6 },
-  device: { padding: 12, borderBottomWidth: 1, borderBottomColor: "#e2e8f0", backgroundColor: "#fff" },
-  deviceText: { fontSize: 15, color: "#0f172a" },
+  label: { fontSize: 13, color: "#5b6b7b" },
+  link: { color: "#0f8a7d", fontSize: 14, marginTop: 6 },
+  device: { padding: 12, borderBottomWidth: 1, borderBottomColor: "#dce7e4", backgroundColor: "#fff" },
+  deviceText: { fontSize: 15, color: "#0e2a47" },
 });

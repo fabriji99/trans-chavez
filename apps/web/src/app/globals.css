@@ -1,11 +1,11 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  --background: #f3f8f7;
+  --foreground: #0e2a47;
 
   --chart-surface: #fcfcfb;
-  --chart-series-1: #2563eb;
+  --chart-series-1: #0f8a7d;
   --chart-ink-secondary: #52514e;
   --chart-ink-muted: #898781;
   --chart-grid: #e1e0d9;
@@ -17,7 +17,28 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-inter);
   --font-display: var(--font-jakarta);
-  --color-canvas: #eef2f6;
+  --color-canvas: #e6f0ee;
+
+  /* Paleta del diseño: teal como color de marca (reemplaza al azul) */
+  --color-blue-50: #e3f4f1;
+  --color-blue-100: #c9ebe6;
+  --color-blue-200: #9fd9d1;
+  --color-blue-500: #17a395;
+  --color-blue-600: #0f8a7d;
+  --color-blue-700: #0b6f65;
+  --color-blue-800: #09574f;
+
+  /* Neutros con matiz verdoso/azul marino del diseño */
+  --color-slate-50: #f3f8f7;
+  --color-slate-100: #eef4f2;
+  --color-slate-200: #dce7e4;
+  --color-slate-300: #b8ccc8;
+  --color-slate-400: #8a9bab;
+  --color-slate-500: #5b6b7b;
+  --color-slate-600: #475a6b;
+  --color-slate-700: #2f4358;
+  --color-slate-800: #1a3450;
+  --color-slate-900: #0e2a47;
 }
 
 body {

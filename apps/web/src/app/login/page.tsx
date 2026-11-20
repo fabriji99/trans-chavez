@@ -32,22 +32,26 @@ export default function LoginPage() {
   const [state, action, pending] = useActionState(signIn, initialState);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-canvas px-4">
-      <div className="w-full max-w-sm rounded-3xl border border-slate-200 bg-white p-7 shadow-xl shadow-slate-900/5">
-        <div className="mb-5 flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-sm shadow-blue-600/25">
-            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+    <div className="flex min-h-screen flex-col bg-canvas sm:items-center sm:justify-center sm:px-4">
+      <div className="w-full sm:max-w-sm">
+        <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 to-blue-700 px-7 pb-24 pt-16 text-white sm:rounded-t-3xl sm:pt-10">
+          <div className="absolute -right-14 -top-14 h-56 w-56 rounded-full bg-white/10" />
+          <div className="absolute -bottom-16 right-10 h-36 w-36 rounded-full bg-white/5" />
+          <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-lg shadow-black/10">
+            <svg className="h-7 w-7 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
               <rect x="2" y="5" width="20" height="14" rx="3" />
               <line x1="2" y1="10" x2="22" y2="10" />
               <circle cx="7" cy="15" r="1" fill="currentColor" />
               <line x1="12" y1="15" x2="17" y2="15" />
             </svg>
           </div>
-          <div>
-            <h1 className="font-display text-xl font-extrabold tracking-tight text-slate-900">Trans. Chávez</h1>
-            <p className="text-sm text-slate-500">Inicia sesión</p>
-          </div>
+          <h1 className="relative mt-5 font-display text-3xl font-extrabold tracking-tight">Trans. Chávez</h1>
+          <p className="relative mt-1 text-sm text-white/85">Cobro de pasajes y control de viajes</p>
         </div>
+
+        <div className="-mt-14 mx-5 rounded-3xl border border-slate-200 bg-white p-6 shadow-xl shadow-slate-900/10 sm:mx-0 sm:mt-0 sm:rounded-t-none sm:border-t-0">
+          <h2 className="font-display text-xl font-extrabold tracking-tight text-slate-900">Iniciar sesión</h2>
+          <p className="mb-5 mt-1 text-sm text-slate-500">Entra con tu usuario y contraseña</p>
 
         <Suspense>
           <UrlError />
@@ -94,11 +98,17 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={pending}
-            className="w-full rounded-2xl bg-blue-600 px-4 py-3.5 font-display text-base font-bold text-white shadow-lg shadow-blue-600/25 hover:bg-blue-700 active:scale-[0.99] disabled:opacity-60"
+            className="w-full rounded-2xl bg-blue-600 px-4 py-4 font-display text-base font-bold text-white shadow-lg shadow-blue-600/25 hover:bg-blue-700 active:scale-[0.99] disabled:opacity-60"
           >
             {pending ? "Ingresando..." : "Ingresar"}
           </button>
         </form>
+
+        <p className="mt-5 rounded-2xl bg-blue-50 px-3.5 py-3 text-[13px] leading-snug text-blue-700">
+          Administradores y cobradores usan la misma pantalla. Te llevamos a tu panel automáticamente.
+        </p>
+        </div>
+        <p className="py-6 text-center text-xs text-slate-500">¿Olvidaste tu contraseña? Pídesela al administrador.</p>
       </div>
     </div>
   );

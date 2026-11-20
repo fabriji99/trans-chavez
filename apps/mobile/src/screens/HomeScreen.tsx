@@ -195,35 +195,35 @@ export function HomeScreen({
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#f8fafc", padding: 20 },
+  container: { flex: 1, backgroundColor: "#f3f8f7", padding: 20 },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
     marginBottom: 20,
   },
-  title: { fontSize: 18, fontWeight: "600", color: "#0f172a" },
-  subtitle: { fontSize: 13, color: "#64748b", marginTop: 2 },
-  logout: { fontSize: 13, color: "#64748b" },
+  title: { fontSize: 18, fontWeight: "600", color: "#0e2a47" },
+  subtitle: { fontSize: 13, color: "#5b6b7b", marginTop: 2 },
+  logout: { fontSize: 13, color: "#5b6b7b" },
   notice: { fontSize: 13, color: "#b45309", marginBottom: 12 },
   startButton: {
-    backgroundColor: "#2563eb",
+    backgroundColor: "#0f8a7d",
     borderRadius: 16,
     paddingVertical: 16,
     alignItems: "center",
     marginBottom: 16,
   },
   startButtonText: { color: "#fff", fontSize: 16, fontWeight: "800" },
-  empty: { textAlign: "center", color: "#94a3b8", marginTop: 40 },
+  empty: { textAlign: "center", color: "#8a9bab", marginTop: 40 },
   card: {
     backgroundColor: "#fff",
     borderRadius: 16,
     padding: 16,
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: "#dce7e4",
   },
-  cardTitle: { fontSize: 16, fontWeight: "600", color: "#0f172a" },
-  cardSubtitle: { fontSize: 13, color: "#64748b", marginTop: 2 },
+  cardTitle: { fontSize: 16, fontWeight: "600", color: "#0e2a47" },
+  cardSubtitle: { fontSize: 13, color: "#5b6b7b", marginTop: 2 },
   cardFooter: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -239,6 +239,6 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   statusActive: { backgroundColor: "#ecfdf5", color: "#059669" },
-  statusDone: { backgroundColor: "#f1f5f9", color: "#475569" },
+  statusDone: { backgroundColor: "#eef4f2", color: "#475569" },
   cardStats: { fontSize: 12, color: "#475569" },
 });
