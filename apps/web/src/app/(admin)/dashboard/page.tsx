@@ -22,24 +22,6 @@ type MonthTrip = {
   tickets: { fare_amount: number; passenger_count: number }[];
 };
 
-/** Viajes (con sus boletos) de un mes, en hora de Honduras (UTC-6, sin horario de verano). */
-async function loadMonth(
-  supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>,
-  year: number,
-  month: number, // 1-12
-): Promise<MonthTrip[]> {
-  const pad = (n: number) => String(n).padStart(2, "0");
-  const nextYear = month === 12 ? year + 1 : year;
-  const nextMonth = month === 12 ? 1 : month + 1;
-  const { data } = await supabase
-    .from("trips")
-    .select("id, route_id, cobrador_id, status, departure_at, tickets(fare_amount, passenger_count)")
-    .gte("departure_at", `${year}-${pad(month)}-01T00:00:00-06:00`)
-    .lt("departure_at", `${nextYear}-${pad(nextMonth)}-01T00:00:00-06:00`)
-    .limit(2000);
-  return (data as unknown as MonthTrip[]) ?? [];
-}
-
 /** Viajes (con boletos) desde un día (YYYY-MM-DD, hora de Honduras) en adelante. */
 async function loadSince(
   supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>,
@@ -89,13 +71,25 @@ export default async function DashboardPage() {
   // Datos desde el 1 del mes de hace 11 meses (para el rango "Año")
   const yearIdx = year * 12 + (month - 1) - 11;
   const rangeStart = `${Math.floor(yearIdx / 12)}-${pad((yearIdx % 12) + 1)}-01`;
-  const [monthTrips, prevTrips, recentTrips, cobradoresRes, routesRes] = await Promise.all([
-    loadMonth(supabase, year, month),
-    loadMonth(supabase, prevYear, prevMonth),
+  // Una sola consulta de los últimos 12 meses; mes actual y anterior se sacan de ahí
+  const [recentTrips, cobradoresRes, routesRes] = await Promise.all([
     loadSince(supabase, rangeStart),
     supabase.from("profiles").select("*").eq("role", "cobrador"),
     supabase.from("routes").select("*"),
   ]);
+
+  const monthKey = `${year}-${pad(month)}`;
+  const prevKey = `${prevYear}-${pad(prevMonth)}`;
+  const monthTrips: MonthTrip[] = [];
+  const prevTrips: MonthTrip[] = [];
+  const revenueByDay = new Map<string, number>();
+  for (const t of recentTrips) {
+    const d = hondurasDay(t.departure_at);
+    const key = d.slice(0, 7);
+    if (key === monthKey) monthTrips.push(t);
+    else if (key === prevKey) prevTrips.push(t);
+    revenueByDay.set(d, (revenueByDay.get(d) ?? 0) + summarize([t]).revenue);
+  }
 
   const monthSummary = summarize(monthTrips);
   const totalToday = summarize(
@@ -111,11 +105,6 @@ export default async function DashboardPage() {
       : null;
 
   // Ingresos de cada día, desde hace 12 meses hasta el fin del mes en curso
-  const revenueByDay = new Map<string, number>();
-  for (const t of recentTrips) {
-    const d = hondurasDay(t.departure_at);
-    revenueByDay.set(d, (revenueByDay.get(d) ?? 0) + summarize([t]).revenue);
-  }
   const lastDay = `${year}-${pad(month)}-${pad(daysInMonth)}`;
   const daily: DailyRevenue[] = [];
   for (let d = rangeStart; d <= lastDay; d = addDays(d, 1)) {

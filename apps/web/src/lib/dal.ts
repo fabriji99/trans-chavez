@@ -5,24 +5,15 @@ import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "./supabase/server";
 import type { Profile } from "@trans-chavez/shared";
 
-export const getCurrentProfile = cache(async (): Promise<Profile | null> => {
+/**
+ * Sesión y perfil del usuario. Se calcula una sola vez por petición:
+ * el layout y la página (y getCurrentProfile) comparten el mismo resultado
+ * en vez de repetir las consultas a Supabase.
+ */
+const loadSession = cache(async () => {
   const supabase = await createSupabaseServerClient();
   const { data: userData } = await supabase.auth.getUser();
-  if (!userData.user) return null;
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", userData.user.id)
-    .single();
-
-  return (profile as Profile) ?? null;
-});
-
-export async function requireAdmin(): Promise<Profile> {
-  const supabase = await createSupabaseServerClient();
-  const { data: userData } = await supabase.auth.getUser();
-  if (!userData.user) redirect("/login");
+  if (!userData.user) return { authed: false as const };
 
   const { data: profile, error } = await supabase
     .from("profiles")
@@ -30,13 +21,29 @@ export async function requireAdmin(): Promise<Profile> {
     .eq("id", userData.user.id)
     .single();
 
+  return {
+    authed: true as const,
+    profile: (profile as Profile | null) ?? null,
+    error: error?.message,
+  };
+});
+
+export const getCurrentProfile = cache(async (): Promise<Profile | null> => {
+  const session = await loadSession();
+  return session.authed ? session.profile : null;
+});
+
+export async function requireAdmin(): Promise<Profile> {
+  const session = await loadSession();
+  if (!session.authed) redirect("/login");
+
   // Con sesión iniciada pero sin acceso, se explica el motivo en el login
   // (si no, el proxy y este layout se mandan el uno al otro sin fin).
-  if (error || !profile) {
-    console.error("requireAdmin: no se pudo leer el perfil", error?.message);
+  if (session.error || !session.profile) {
+    console.error("requireAdmin: no se pudo leer el perfil", session.error);
     redirect("/login?error=perfil");
   }
-  const p = profile as Profile;
+  const p = session.profile;
   if (p.role === "cobrador") redirect("/cobrador");
   if (p.role !== "admin") redirect("/login?error=sin-acceso");
   return p;
@@ -44,21 +51,14 @@ export async function requireAdmin(): Promise<Profile> {
 
 /** Cobrador con sesión; un administrador que llegue aquí se manda a su panel. */
 export async function requireCobrador(): Promise<Profile> {
-  const supabase = await createSupabaseServerClient();
-  const { data: userData } = await supabase.auth.getUser();
-  if (!userData.user) redirect("/login");
+  const session = await loadSession();
+  if (!session.authed) redirect("/login");
 
-  const { data: profile, error } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", userData.user.id)
-    .single();
-
-  if (error || !profile) {
-    console.error("requireCobrador: no se pudo leer el perfil", error?.message);
+  if (session.error || !session.profile) {
+    console.error("requireCobrador: no se pudo leer el perfil", session.error);
     redirect("/login?error=perfil");
   }
-  const p = profile as Profile;
+  const p = session.profile;
   if (p.role === "admin") redirect("/dashboard");
   if (p.role !== "cobrador") redirect("/login?error=sin-acceso");
   return p;
