@@ -30,6 +30,9 @@ export async function signIn(
     return { error: "Credenciales inválidas." };
   }
 
+  // Una sola sesión por usuario: cierra la que estuviera abierta en otro dispositivo
+  await supabase.rpc("claim_single_session");
+
   redirect("/");
 }
 

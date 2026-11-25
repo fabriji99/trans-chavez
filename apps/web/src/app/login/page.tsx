@@ -9,6 +9,8 @@ const initialState: AuthFormState = {};
 const URL_ERRORS: Record<string, string> = {
   perfil:
     "Iniciaste sesión, pero no se pudo leer tu perfil. Cierra la sesión e inténtalo de nuevo; si sigue igual, avisa al administrador.",
+  sesion:
+    "Tu sesión se cerró: se abrió en otro dispositivo o venció. Inicia sesión de nuevo.",
   "sin-acceso":
     "Esta cuenta no tiene acceso. Avisa al administrador.",
 };

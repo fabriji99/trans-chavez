@@ -39,6 +39,11 @@ export default async function proxy(request: NextRequest) {
   if (!data.user && !isPublicPath) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
+    // Si había cookies de sesión pero ya no valen, la sesión se cerró (otro dispositivo o vencida)
+    const hadSession = request.cookies
+      .getAll()
+      .some((c) => c.name.startsWith("sb-") && c.name.includes("auth-token"));
+    if (hadSession) url.searchParams.set("error", "sesion");
     return NextResponse.redirect(url);
   }
 

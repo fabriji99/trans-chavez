@@ -27,6 +27,10 @@ export function LoginScreen() {
       email: usernameToEmail(username),
       password,
     });
+    if (!error) {
+      // Una sola sesión por usuario: cierra la que estuviera abierta en otro dispositivo
+      await supabase.rpc("claim_single_session");
+    }
     setLoading(false);
     if (error) {
       notify("Error", "Usuario o contraseña incorrectos.");
