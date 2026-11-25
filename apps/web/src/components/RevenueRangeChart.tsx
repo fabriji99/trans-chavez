@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { RevenueBarChart } from "./RevenueBarChart";
+import { RevenueAreaChart } from "./RevenueAreaChart";
 
 export interface DailyRevenue {
   /** Día YYYY-MM-DD (hora de Honduras). */
@@ -110,7 +110,7 @@ export function RevenueRangeChart({
           {RANGES.find((r) => r.key === range)?.hint} · Total: <span className="font-bold text-slate-900">{money(total)}</span>
         </p>
       </div>
-      <RevenueBarChart data={data} />
+      <RevenueAreaChart data={data} />
     </div>
   );
 }

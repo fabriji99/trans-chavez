@@ -2,6 +2,7 @@ import { requireAdmin } from "@/lib/dal";
 import { signOut } from "@/lib/actions/auth";
 import { BrandMark } from "@/components/BrandMark";
 import { AdminNav } from "@/components/AdminNav";
+import { AdminSidebar } from "@/components/AdminSidebar";
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Dashboard" },
@@ -23,7 +24,9 @@ export default async function AdminLayout({
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <header className="sticky top-0 z-10 border-b border-slate-200 bg-white/90 backdrop-blur-md">
+      <AdminSidebar items={NAV_ITEMS} name={profile.full_name} signOutAction={signOut} />
+      <div className="lg:pl-56">
+      <header className="sticky top-0 z-10 border-b lg:hidden border-slate-200 bg-white/90 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-4 px-4 py-2.5 sm:px-6">
           <div className="flex items-center gap-2.5">
             <BrandMark />
@@ -45,7 +48,8 @@ export default async function AdminLayout({
           <AdminNav items={NAV_ITEMS} />
         </div>
       </header>
-      <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8">{children}</main>
+      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8">{children}</main>
+      </div>
     </div>
   );
 }
