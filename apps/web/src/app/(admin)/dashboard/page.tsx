@@ -49,7 +49,7 @@ async function loadSince(
     .from("trips")
     .select("id, route_id, cobrador_id, status, departure_at, tickets(fare_amount, passenger_count)")
     .gte("departure_at", `${fromDay}T00:00:00-06:00`)
-    .limit(5000);
+    .limit(10000);
   return (data as unknown as MonthTrip[]) ?? [];
 }
 
@@ -86,8 +86,9 @@ export default async function DashboardPage() {
   const prevMonth = month === 1 ? 12 : month - 1;
 
   const pad = (n: number) => String(n).padStart(2, "0");
-  const monthStart = `${year}-${pad(month)}-01`;
-  const rangeStart = addDays(today, -89) < monthStart ? addDays(today, -89) : monthStart;
+  // Datos desde el 1 del mes de hace 11 meses (para el rango "Año")
+  const yearIdx = year * 12 + (month - 1) - 11;
+  const rangeStart = `${Math.floor(yearIdx / 12)}-${pad((yearIdx % 12) + 1)}-01`;
   const [monthTrips, prevTrips, recentTrips, cobradoresRes, routesRes] = await Promise.all([
     loadMonth(supabase, year, month),
     loadMonth(supabase, prevYear, prevMonth),
@@ -109,7 +110,7 @@ export default async function DashboardPage() {
       ? ((monthSummary.revenue - prevSummary.revenue) / prevSummary.revenue) * 100
       : null;
 
-  // Ingresos de cada día, desde hace 90 días (o el 1 del mes) hasta el fin del mes en curso
+  // Ingresos de cada día, desde hace 12 meses hasta el fin del mes en curso
   const revenueByDay = new Map<string, number>();
   for (const t of recentTrips) {
     const d = hondurasDay(t.departure_at);
