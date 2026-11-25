@@ -56,12 +56,12 @@ function summarize(trips: MonthTrip[]) {
 export default async function DashboardPage() {
   const supabase = await createSupabaseServerClient();
 
-  // Todo el dashboard es del mes en curso: del día 1 hasta hoy (hora de Honduras)
+  // Todo el dashboard es del mes completo en curso (hora de Honduras)
   const today = hondurasDay(new Date());
-  const [yearStr, monthStr, dayStr] = today.split("-");
+  const [yearStr, monthStr] = today.split("-");
   const year = Number(yearStr);
   const month = Number(monthStr);
-  const daysElapsed = Number(dayStr);
+  const daysInMonth = new Date(year, month, 0).getDate();
   const prevYear = month === 1 ? year - 1 : year;
   const prevMonth = month === 1 ? 12 : month - 1;
 
@@ -78,18 +78,16 @@ export default async function DashboardPage() {
   ).revenue;
   const avgPerTrip = monthSummary.trips > 0 ? monthSummary.revenue / monthSummary.trips : 0;
 
-  // Mes anterior, solo hasta el mismo día del mes para comparar lo mismo con lo mismo
-  const prevSummary = summarize(
-    prevTrips.filter((t) => Number(hondurasDay(t.departure_at).slice(8, 10)) <= daysElapsed),
-  );
+  // Mes anterior completo, para comparar mes contra mes
+  const prevSummary = summarize(prevTrips);
   const change =
     prevSummary.revenue > 0
       ? ((monthSummary.revenue - prevSummary.revenue) / prevSummary.revenue) * 100
       : null;
 
-  // Ingresos de cada día del 1 hasta hoy (los días sin viajes cuentan como 0)
+  // Ingresos de cada día del mes (los días sin viajes cuentan como 0)
   const pad = (n: number) => String(n).padStart(2, "0");
-  const byDay = Array.from({ length: daysElapsed }, (_, i) => {
+  const byDay = Array.from({ length: daysInMonth }, (_, i) => {
     const day = `${year}-${pad(month)}-${pad(i + 1)}`;
     return {
       label: `${pad(i + 1)}-${MONTHS[month - 1].slice(0, 3)}`,
@@ -122,8 +120,7 @@ export default async function DashboardPage() {
       <div>
         <h1 className="font-display text-lg font-bold text-slate-900">Dashboard</h1>
         <p className="text-sm text-slate-500">
-          Resumen de {MONTHS[month - 1]} {year}: del 1 al {daysElapsed}{" "}
-          ({daysElapsed} {daysElapsed === 1 ? "día" : "días"}).
+          Resumen de {MONTHS[month - 1]} {year}: mes completo, del 1 al {daysInMonth}.
         </p>
       </div>
 
@@ -131,11 +128,11 @@ export default async function DashboardPage() {
         <p className="mb-4 text-xs text-slate-500">
           {change === null
             ? `Sin datos de ${MONTHS[prevMonth - 1]} para comparar`
-            : `${change >= 0 ? "▲" : "▼"} ${Math.abs(change).toFixed(0)}% frente a los mismos ${daysElapsed} días de ${MONTHS[prevMonth - 1]} (${money(prevSummary.revenue)})`}
+            : `${change >= 0 ? "▲" : "▼"} ${Math.abs(change).toFixed(0)}% frente a todo ${MONTHS[prevMonth - 1]} (${money(prevSummary.revenue)})`}
         </p>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-5">
           <StatTile label="Ingresos de hoy" value={totalToday} />
-          <StatTile label={`Ingresos (${daysElapsed} ${daysElapsed === 1 ? "día" : "días"})`} value={monthSummary.revenue} />
+          <StatTile label="Ingresos del mes" value={monthSummary.revenue} />
           <StatTile label="Viajes" value={monthSummary.trips} isCurrency={false} />
           <StatTile label="Boletos" value={monthSummary.tickets} isCurrency={false} />
           <StatTile label="Promedio por viaje" value={avgPerTrip} />
