@@ -1,6 +1,7 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { StatTile } from "@/components/StatTile";
 import { RevenueBarChart } from "@/components/RevenueBarChart";
+import { RevenueRangeChart, type DailyRevenue } from "@/components/RevenueRangeChart";
 import { hondurasDay } from "@trans-chavez/shared";
 import type { Profile, Route } from "@trans-chavez/shared";
 
@@ -39,6 +40,25 @@ async function loadMonth(
   return (data as unknown as MonthTrip[]) ?? [];
 }
 
+/** Viajes (con boletos) desde un día (YYYY-MM-DD, hora de Honduras) en adelante. */
+async function loadSince(
+  supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>,
+  fromDay: string,
+): Promise<MonthTrip[]> {
+  const { data } = await supabase
+    .from("trips")
+    .select("id, route_id, cobrador_id, status, departure_at, tickets(fare_amount, passenger_count)")
+    .gte("departure_at", `${fromDay}T00:00:00-06:00`)
+    .limit(5000);
+  return (data as unknown as MonthTrip[]) ?? [];
+}
+
+function addDays(day: string, n: number): string {
+  const d = new Date(`${day}T00:00:00Z`);
+  d.setUTCDate(d.getUTCDate() + n);
+  return d.toISOString().slice(0, 10);
+}
+
 function summarize(trips: MonthTrip[]) {
   let revenue = 0;
   let tickets = 0;
@@ -65,9 +85,13 @@ export default async function DashboardPage() {
   const prevYear = month === 1 ? year - 1 : year;
   const prevMonth = month === 1 ? 12 : month - 1;
 
-  const [monthTrips, prevTrips, cobradoresRes, routesRes] = await Promise.all([
+  const pad = (n: number) => String(n).padStart(2, "0");
+  const monthStart = `${year}-${pad(month)}-01`;
+  const rangeStart = addDays(today, -89) < monthStart ? addDays(today, -89) : monthStart;
+  const [monthTrips, prevTrips, recentTrips, cobradoresRes, routesRes] = await Promise.all([
     loadMonth(supabase, year, month),
     loadMonth(supabase, prevYear, prevMonth),
+    loadSince(supabase, rangeStart),
     supabase.from("profiles").select("*").eq("role", "cobrador"),
     supabase.from("routes").select("*"),
   ]);
@@ -85,15 +109,22 @@ export default async function DashboardPage() {
       ? ((monthSummary.revenue - prevSummary.revenue) / prevSummary.revenue) * 100
       : null;
 
-  // Ingresos de cada día del mes (los días sin viajes cuentan como 0)
-  const pad = (n: number) => String(n).padStart(2, "0");
-  const byDay = Array.from({ length: daysInMonth }, (_, i) => {
-    const day = `${year}-${pad(month)}-${pad(i + 1)}`;
-    return {
-      label: `${pad(i + 1)}-${MONTHS[month - 1].slice(0, 3)}`,
-      total_revenue: summarize(monthTrips.filter((t) => hondurasDay(t.departure_at) === day)).revenue,
-    };
-  });
+  // Ingresos de cada día, desde hace 90 días (o el 1 del mes) hasta el fin del mes en curso
+  const revenueByDay = new Map<string, number>();
+  for (const t of recentTrips) {
+    const d = hondurasDay(t.departure_at);
+    revenueByDay.set(d, (revenueByDay.get(d) ?? 0) + summarize([t]).revenue);
+  }
+  const lastDay = `${year}-${pad(month)}-${pad(daysInMonth)}`;
+  const daily: DailyRevenue[] = [];
+  for (let d = rangeStart; d <= lastDay; d = addDays(d, 1)) {
+    const [, m, dd] = d.split("-");
+    daily.push({
+      date: d,
+      label: `${dd}-${MONTHS[Number(m) - 1].slice(0, 3)}`,
+      total_revenue: revenueByDay.get(d) ?? 0,
+    });
+  }
 
   const cobradorName = new Map(
     ((cobradoresRes.data as Profile[]) ?? []).map((c) => [c.id, c.full_name]),
@@ -165,7 +196,7 @@ export default async function DashboardPage() {
 
       <section className="rounded-2xl border border-slate-200 bg-white shadow-xs p-4 sm:p-5">
         <h2 className="mb-4 text-xs font-bold uppercase tracking-wider text-slate-500">Ingresos por día</h2>
-        <RevenueBarChart data={byDay} />
+        <RevenueRangeChart daily={daily} today={today} />
       </section>
 
       <section className="rounded-2xl border border-slate-200 bg-white shadow-xs p-4 sm:p-5">
