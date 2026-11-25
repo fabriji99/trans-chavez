@@ -26,6 +26,8 @@ interface TripRow {
   route?: Route;
   bus?: Bus;
   ticketCount: number;
+  passengers: number;
+  total: number;
 }
 
 const STATUS_LABEL: Record<Trip["status"], string> = {
@@ -69,6 +71,8 @@ export function HomeScreen({
       route: routeById.get(lt.trip.route_id),
       bus: busById.get(lt.trip.bus_id),
       ticketCount: lt.tickets.length,
+      passengers: lt.tickets.reduce((n, t) => n + t.passenger_count, 0),
+      total: lt.tickets.reduce((n, t) => n + t.fare_amount * t.passenger_count, 0),
     }));
 
     // Viajes del servidor que no están en el teléfono (ej. se iniciaron en otro dispositivo)
@@ -85,18 +89,24 @@ export function HomeScreen({
       if (remote.length > 0) {
         const { data: tickets } = await supabase
           .from("tickets")
-          .select("trip_id")
+          .select("trip_id, passenger_count, fare_amount")
           .in("trip_id", remote.map((t) => t.id));
-        const counts = new Map<string, number>();
-        for (const t of (tickets as Pick<Ticket, "trip_id">[]) ?? []) {
-          counts.set(t.trip_id, (counts.get(t.trip_id) ?? 0) + 1);
+        const counts = new Map<string, { n: number; pax: number; total: number }>();
+        for (const t of (tickets as Pick<Ticket, "trip_id" | "passenger_count" | "fare_amount">[]) ?? []) {
+          const c = counts.get(t.trip_id) ?? { n: 0, pax: 0, total: 0 };
+          c.n += 1;
+          c.pax += t.passenger_count;
+          c.total += t.fare_amount * t.passenger_count;
+          counts.set(t.trip_id, c);
         }
         for (const trip of remote) {
           result.push({
             trip,
             route: routeById.get(trip.route_id),
             bus: busById.get(trip.bus_id),
-            ticketCount: counts.get(trip.id) ?? 0,
+            ticketCount: counts.get(trip.id)?.n ?? 0,
+            passengers: counts.get(trip.id)?.pax ?? 0,
+            total: counts.get(trip.id)?.total ?? 0,
           });
         }
       }
@@ -114,6 +124,15 @@ export function HomeScreen({
   }, [profile.id]);
 
   const hasInProgress = rows.some((r) => r.trip.status === "in_progress");
+  const finished = rows.filter((r) => r.trip.status !== "in_progress").length;
+  const day = rows.reduce(
+    (a, r) => ({
+      tickets: a.tickets + r.ticketCount,
+      passengers: a.passengers + r.passengers,
+      total: a.total + r.total,
+    }),
+    { tickets: 0, passengers: 0, total: 0 },
+  );
 
   useEffect(() => {
     load();
@@ -132,6 +151,33 @@ export function HomeScreen({
       </View>
 
       <SyncBanner userId={profile.id} />
+
+      {!loading && (
+        <View style={styles.dayCard}>
+          <View style={styles.dayTop}>
+            <View>
+              <Text style={styles.dayLabel}>TOTAL DEL DÍA</Text>
+              <Text style={styles.dayTotal}>L {day.total.toFixed(2)}</Text>
+            </View>
+            <Text style={styles.dayPill}>
+              {finished} {finished === 1 ? "finalizado" : "finalizados"}
+              {hasInProgress ? " · 1 en curso" : ""}
+            </Text>
+          </View>
+          <View style={styles.dayStats}>
+            {[
+              ["Viajes", rows.length],
+              ["Boletos", day.tickets],
+              ["Pasajeros", day.passengers],
+            ].map(([label, value]) => (
+              <View key={label} style={styles.dayStat}>
+                <Text style={styles.dayStatLabel}>{label}</Text>
+                <Text style={styles.dayStatValue}>{value}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+      )}
 
       {hasInProgress ? (
         <Text style={styles.notice}>
@@ -183,7 +229,7 @@ export function HomeScreen({
                   {isTripOverdue(item.trip) ? ` · más de ${TRIP_OPEN_ALERT_MINUTES} min abierto` : ""}
                 </Text>
                 <Text style={styles.cardStats}>
-                  {item.ticketCount} {item.ticketCount === 1 ? "boleto" : "boletos"}
+                  {item.ticketCount} {item.ticketCount === 1 ? "boleto" : "boletos"} · L {item.total.toFixed(2)}
                 </Text>
               </View>
             </Pressable>
@@ -205,6 +251,35 @@ const styles = StyleSheet.create({
   title: { fontSize: 18, fontWeight: "600", color: "#0e2a47" },
   subtitle: { fontSize: 13, color: "#5b6b7b", marginTop: 2 },
   logout: { fontSize: 13, color: "#5b6b7b" },
+  dayCard: {
+    backgroundColor: "#0f8a7d",
+    borderRadius: 24,
+    padding: 16,
+    marginBottom: 16,
+  },
+  dayTop: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start" },
+  dayLabel: { fontSize: 11, fontWeight: "700", letterSpacing: 1, color: "rgba(255,255,255,0.8)" },
+  dayTotal: { fontSize: 30, fontWeight: "800", color: "#fff", marginTop: 2 },
+  dayPill: {
+    fontSize: 11,
+    fontWeight: "600",
+    color: "#fff",
+    backgroundColor: "rgba(255,255,255,0.18)",
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 999,
+    overflow: "hidden",
+  },
+  dayStats: { flexDirection: "row", gap: 8, marginTop: 12 },
+  dayStat: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.15)",
+    borderRadius: 16,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  dayStatLabel: { fontSize: 11, fontWeight: "600", color: "rgba(255,255,255,0.8)" },
+  dayStatValue: { fontSize: 20, fontWeight: "800", color: "#fff" },
   notice: { fontSize: 13, color: "#b45309", marginBottom: 12 },
   startButton: {
     backgroundColor: "#0f8a7d",

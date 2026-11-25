@@ -36,12 +36,17 @@ export default async function CobradorHome() {
   const busById = new Map(((busData as Bus[] | null) ?? []).map((b) => [b.id, b]));
 
   const stats = new Map<string, { count: number; total: number }>();
+  const day = { tickets: 0, passengers: 0, total: 0 };
   for (const t of (ticketData as Pick<Ticket, "trip_id" | "passenger_count" | "fare_amount">[] | null) ?? []) {
     const s = stats.get(t.trip_id) ?? { count: 0, total: 0 };
     s.count += 1;
     s.total += t.fare_amount * t.passenger_count;
     stats.set(t.trip_id, s);
+    day.tickets += 1;
+    day.passengers += t.passenger_count;
+    day.total += t.fare_amount * t.passenger_count;
   }
+  const finished = trips.filter((t) => t.status !== "in_progress").length;
 
   const inProgress = trips.find((t) => t.status === "in_progress");
 
@@ -49,6 +54,31 @@ export default async function CobradorHome() {
     <div>
       <h1 className="font-display text-lg font-bold text-slate-900">Hola, {profile.full_name}</h1>
       <p className="mb-4 text-sm text-slate-500">Tus viajes de hoy</p>
+
+      <section className="mb-4 rounded-3xl bg-gradient-to-br from-blue-600 to-blue-700 p-4 text-white shadow-lg shadow-blue-600/20">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-wider text-white/80">Total del día</p>
+            <p className="tabular mt-1 font-display text-3xl font-extrabold tracking-tight">{money(day.total)}</p>
+          </div>
+          <span className="rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-semibold">
+            {finished} {finished === 1 ? "finalizado" : "finalizados"}
+            {inProgress ? " · 1 en curso" : ""}
+          </span>
+        </div>
+        <div className="mt-3 grid grid-cols-3 gap-2">
+          {[
+            ["Viajes", trips.length],
+            ["Boletos", day.tickets],
+            ["Pasajeros", day.passengers],
+          ].map(([label, value]) => (
+            <div key={label} className="rounded-2xl bg-black/15 px-3 py-2">
+              <p className="text-[11px] font-semibold text-white/80">{label}</p>
+              <p className="tabular font-display text-xl font-extrabold">{value}</p>
+            </div>
+          ))}
+        </div>
+      </section>
 
       {inProgress ? (
         <Link
