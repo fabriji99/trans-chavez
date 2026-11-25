@@ -26,7 +26,9 @@ export async function createCobrador(formData: FormData) {
     email: usernameToEmail(username.data),
     password,
     email_confirm: true,
-    user_metadata: { role: "cobrador", full_name: fullName },
+    // El rol va en app_metadata: solo el servidor puede escribirlo
+    app_metadata: { role: "cobrador" },
+    user_metadata: { full_name: fullName },
   });
   if (error) {
     throw new Error(

@@ -11,7 +11,9 @@ const fmt = (iso: string | null) =>
   iso ? new Date(iso).toLocaleString("es-HN", { timeZone: TZ, hour12: false }) : "";
 
 function csvCell(value: unknown): string {
-  const s = value === null || value === undefined ? "" : String(value);
+  let s = value === null || value === undefined ? "" : String(value);
+  // Evita que Excel ejecute como fórmula un texto que empiece con = + @ o similares
+  if (typeof value === "string" && /^[=+@\t\r]|^-(?!\d)/.test(s)) s = `'${s}`;
   return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 }
 
